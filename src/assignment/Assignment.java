@@ -94,8 +94,10 @@ public class Assignment {
         String itemID;
         char size;
 
-        Menu orderItem; //get the ordered menu details
-        OrderDetails orderDetails = new OrderDetails();  //save to orderDetails and add to cart
+        Menu orderItem = new Menu(); //get the ordered menu details
+        int qtyOrder = 0;
+        OrderDetails orderDetails = new OrderDetails(); //save to orderDetails and add to cart
+        int sameItemIndex = 0;
 
         clearScreen();
         displayMenu(menu);
@@ -145,25 +147,29 @@ public class Assignment {
             if (i.itemID.equals(itemID)) {
                 orderItem = i;
                 System.out.print("Enter Quantity    > ");
-                int qty = scan.nextInt();
-                for (OrderDetails j : cart) {   //check same item in cart, if same just add qty
-                    if (j.getOrderList().equals(orderItem)) {
-                        j.setQuantity(j.getQuantity() + qty);
+                qtyOrder = scan.nextInt();
+                for (int j = 0; j < cart.size(); j++) {   //check same item in cart, if same just add qty
+                    if (cart.get(j).getOrderList().equals(orderItem)) {
                         same = true;
+                        sameItemIndex = j;
                         break;
                     }
                 }
                 if (!same) {
-                    orderDetails = new OrderDetails(orderItem, qty);
+                    orderDetails = new OrderDetails(orderItem, qtyOrder);
                 }
 
             }
         }
 
-        System.out.printf("%s - %s [%d]\nAre You Sure ?    > ", orderDetails.getOrderList().itemID, orderDetails.getOrderList().itemName, orderDetails.getQuantity());
+        System.out.printf("%s - %s [%d]\nAre You Sure ?    > ", orderItem.itemID, orderItem.itemName, qtyOrder);
         char choice = scan.next().charAt(0);
         if (Character.toUpperCase(choice) == 'Y') {
-            cart.add(orderDetails);
+            if (same) {
+                cart.get(sameItemIndex).setQuantity(cart.get(sameItemIndex).getQuantity() + qtyOrder);
+            } else {
+                cart.add(orderDetails);
+            }
         }
     }
 
