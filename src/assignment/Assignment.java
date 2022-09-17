@@ -179,6 +179,9 @@ public class Assignment {
 
     public static void displayCart(int orderID, ArrayList<OrderDetails> cart) {
         clearScreen();
+        Collections.sort(cart, OrderDetails.Comparator);
+        double subtotal = 0;
+        int sameCount = 0;
         System.out.println("Cart");
         System.out.println("Order ID : " + orderID);
         if (cart.isEmpty()) { //if empty
@@ -189,13 +192,25 @@ public class Assignment {
         }
         System.out.println("==========================================================");
         System.out.printf("%-9s%-16s%-10s%-6s%-9s%s\n", "Item ID", "Item Name", "Price", "Type", "Quantity", "Subtotal");
-        for (OrderDetails i : cart) {
-            System.out.println(i);
+        for (int i = 0; i < cart.size(); i++) {
+            try {
+                if (cart.get(i).getOrderList().itemName.equals(cart.get(i - 1).getOrderList().itemName)) {
+                    System.out.println(cart.get(i).displaySameOrderDetails());
+                } else {
+                    System.out.println(cart.get(i));
+                }
+            } catch (Exception e) {
+                System.out.println(cart.get(i));
+            } finally {                
+                subtotal += cart.get(i).calculateSubtotal(); //add total
+            }
+
         }
         System.out.println("==========================================================");
-        System.out.printf("Total = RM %.2f\n", OrderDetails.getSubtotal());
-        System.out.println("Make Payment? [Y/N] > ");
+        System.out.printf("Total = RM %.2f\n", subtotal);
+        System.out.print("Make Payment? [Y/N] > ");
         char cont = scan.next().charAt(0);
+
     }
 
     public static void displayMenu(final Menu[] menu) {
