@@ -6,7 +6,7 @@ package assignment;
  */
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
+//import java.util.Collections;
 
 public class Order {
 
@@ -33,15 +33,6 @@ public class Order {
         orderID += totalOrder;
     }
 
-    public Order(OrderType orderType, Employee empDetails, OrderDetails orderDetails) {    //non-member
-        this.orderDate = LocalDate.now();
-        this.orderType = orderType;
-        this.empDetails = empDetails;
-        this.orderDetails = orderDetails;
-        totalOrder++;
-        orderID += totalOrder;
-    }
-
     public int getOrderID() {
         return orderID;
     }
@@ -54,7 +45,7 @@ public class Order {
         return orderType;
     }
 
-    public OrderDetails getOrderDetails() {
+    public ArrayList<OrderDetails> getOrderDetails() {
         return orderDetails;
     }
 
@@ -82,7 +73,7 @@ public class Order {
         this.orderType = orderType;
     }
 
-    public void setOrderDetails(OrderDetails orderDetails) {
+    public void setOrderDetails(ArrayList<OrderDetails> orderDetails) {
         this.orderDetails = orderDetails;
     }
 

@@ -4,7 +4,8 @@ public class OrderType {
 
     char ordertype;
 
-    public void OrderType() {
+    public void OrderType(char orderType) {
+        this.ordertype= orderType;
     }
 
     public char getOrdertype() {
@@ -16,39 +17,44 @@ public class OrderType {
     }
 }
 
-
 //child class TAKEAWAY - FC
-
 class Takeaway extends OrderType {
-    int takeAwayNo; 
-    double charges; 
-    String status; 
+    String takeAwayID;
+    int takeAwayNo;
+    double charges;    
+    String status;
     
+
     public void Takeaway() {
+        takeAwayNo++;
+        this.takeAwayID= "TA"+takeAwayNo;
+        this.charges= 3.00;
+        status= "preparing";
     }
 
     @Override
     public String displayOrderType() {
-        return super.displayOrderType() + 
-                String.format("\n%15s %2d", "T/A No: ", takeAwayNo)+ 
-                String.format("\n%15s %s", "Status: ", status);
+        return super.displayOrderType()
+                + String.format("\n%15s %2d", "T/A No: ", takeAwayNo)
+                + String.format("\n%15s %s", "Status: ", status);
     }
 }
 
 //child class TABLE - FC
-
 class Table extends OrderType {
     int tableNo;
-    String status; 
+    String tableId;
+    String status;
 
     public void Table(int tableNo) {
         this.tableNo = tableNo;
+        this.tableId = "TAB"+tableNo;
+        status="available";
     }
 
     @Override
     public String displayOrderType() {
-        return super.displayOrderType() + 
-                String.format("\n%15s %2d", "Table No: ", tableNo)+ 
-                String.format("\n%15s %s", "Status: ", status);
+        return super.displayOrderType()
+                + String.format("\n%15s %2d", "Table No: ", tableNo);
     }
 }

@@ -12,8 +12,7 @@ public class Assignment {
 
     public static void main(String[] args) {
 
-        LoginInfo loginInfo = new LoginInfo();
-
+        Employee emp = new Employee("Admin123", 'M', "012-2332232", "123", "Admin", 10000);
         //Menu data - FC
         Menu[] menu = {new Food("Fry Noodle", "F001L", 10.00, 'L'), //arg (name, ID, price, size)
             new Food("Fry Noodle", "F001R", 8.00, 'R'), // R = Regular Size
@@ -39,8 +38,8 @@ public class Assignment {
         ArrayList<Order> orderRecord = new ArrayList<Order>();
         //order
         Order order = new Order();
-        
-        boolean doneOrder=false;
+
+        boolean doneOrder = false;
         int choice;
         do {
             clearScreen();
@@ -65,11 +64,11 @@ public class Assignment {
                     System.out.println("Invalid Selection!!");
             }
             if (doneOrder) {    //if an order had done, go out of loop
-                break;  
+                break;
             }
         } while (choice != 3);
-        
-        payment(cart,member,orderRecord);
+
+        payment(cart, member, emp, orderRecord);
 
     }
 
@@ -215,18 +214,21 @@ public class Assignment {
         }
         System.out.println("==========================================================");
         System.out.printf("Total = RM %.2f\n", subtotal);
-        System.out.print("Make Payment? [Y/N] > ");
-        char cont = scan.next().charAt(0);
-        switch (Character.toUpperCase(cont)) {
-            case 'Y':
-                return true;
-            case 'N':
-                return false;
-            default:
-                System.err.println("Invalid Input");
-        }
-        
 
+        char cont;
+        do {
+            System.out.print("Make Payment? [Y/N] > ");
+            cont = scan.next().charAt(0);
+            switch (Character.toUpperCase(cont)) {
+                case 'Y':
+                    return true;
+                case 'N':
+                    break;
+                default:
+                    System.err.println("Invalid Input");
+            }
+        } while (Character.toUpperCase(cont) != 'Y' || Character.toUpperCase(cont) != 'N');
+        return false;
     }
 
     public static void displayMenu(final Menu[] menu) {
@@ -253,11 +255,16 @@ public class Assignment {
         System.out.println("===========================================\n");
     }
 
-    public static void payment(ArrayList<OrderDetails> cart, Member[] member, ArrayList<Order> orderRecord) {
-            Order order;
+    public static void payment(ArrayList<OrderDetails> cart, Member[] member, Employee emp, ArrayList<Order> orderRecord) {
+        System.out.println("[D]ine In/[T]ake away   > ");
+        char orderType = scan.next().charAt(0);
 
+        Order order = new Order();
+//            OrderType orderType, 
+//                    Member memberDetails, 
+//                    Employee empDetails, 
+//                            ArrayList<OrderDetails> orderDetails
 
-        
     }
 // check voucher   
 //            boolean haveVoucher = false;
