@@ -39,6 +39,8 @@ public class Assignment {
         ArrayList<Order> orderRecord = new ArrayList<Order>();
         //order
         Order order = new Order();
+        
+        boolean doneOrder=false;
         int choice;
         do {
             clearScreen();
@@ -55,14 +57,19 @@ public class Assignment {
                     startOrder(menu, cart);
                     break;
                 case 2:
-                    displayCart(order.getOrderID(), cart);
+                    doneOrder = displayCart(order.getOrderID(), cart);
                     break;
                 case 3:
                     break;
                 default:
                     System.out.println("Invalid Selection!!");
             }
+            if (doneOrder) {    //if an order had done, go out of loop
+                break;  
+            }
         } while (choice != 3);
+        
+        payment(cart,member,orderRecord);
 
     }
 
@@ -177,7 +184,7 @@ public class Assignment {
 
     }
 
-    public static void displayCart(int orderID, ArrayList<OrderDetails> cart) {
+    public static boolean displayCart(int orderID, ArrayList<OrderDetails> cart) {
         clearScreen();
         Collections.sort(cart, OrderDetails.Comparator);
         double subtotal = 0;
@@ -185,10 +192,10 @@ public class Assignment {
         System.out.println("Cart");
         System.out.println("Order ID : " + orderID);
         if (cart.isEmpty()) { //if empty
-            System.out.println("Cart Is Empty!");
+            System.err.println("Cart Is Empty!");
             System.out.println("Press Enter To Go Back...");
             scan.nextLine();
-            return;
+            return false;
         }
         System.out.println("==========================================================");
         System.out.printf("%-9s%-16s%-10s%-6s%-9s%s\n", "Item ID", "Item Name", "Price", "Type", "Quantity", "Subtotal");
@@ -201,7 +208,7 @@ public class Assignment {
                 }
             } catch (Exception e) {
                 System.out.println(cart.get(i));
-            } finally {                
+            } finally {
                 subtotal += cart.get(i).calculateSubtotal(); //add total
             }
 
@@ -210,6 +217,15 @@ public class Assignment {
         System.out.printf("Total = RM %.2f\n", subtotal);
         System.out.print("Make Payment? [Y/N] > ");
         char cont = scan.next().charAt(0);
+        switch (Character.toUpperCase(cont)) {
+            case 'Y':
+                return true;
+            case 'N':
+                return false;
+            default:
+                System.err.println("Invalid Input");
+        }
+        
 
     }
 
@@ -237,26 +253,14 @@ public class Assignment {
         System.out.println("===========================================\n");
     }
 
-//    public static boolean getYesNo() {
-//        boolean valid;
-//        do {
-//            valid = true;
-//            char choice = scan.next().charAt(0);
-//
-//            switch (Character.toUpperCase(choice)) {
-//                case 'Y':
-//                    return true;
-//                case 'N':
-//                    return false;
-//                default:
-//                    valid = false;
-//            }
-//        } while (!valid);
-//    }
-//    public static void payment() {
-    //        Payment payment;
-//
-//        boolean haveVoucher = false;
+    public static void payment(ArrayList<OrderDetails> cart, Member[] member, ArrayList<Order> orderRecord) {
+            Order order;
+
+
+        
+    }
+// check voucher   
+//            boolean haveVoucher = false;
 //
 //        System.out.print("Any Voucher? [Y/N] > ");
 //        if (getYesNo()) {
@@ -274,6 +278,4 @@ public class Assignment {
 //                System.out.println("Invalid Voucher");
 //            }
 //        }
-//        
-//    }
 }

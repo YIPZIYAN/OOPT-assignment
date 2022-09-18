@@ -5,13 +5,15 @@ package assignment;
  * @author Yip Zi Yan
  */
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class Order {
 
     private int orderID = 1000;
     private LocalDate orderDate;
     private OrderType orderType;
-    private OrderDetails orderDetails;
+    private ArrayList<OrderDetails> orderDetails;
     private Member memberDetails;
     private Employee empDetails;
     private static int totalOrder;
@@ -21,12 +23,12 @@ public class Order {
         orderID += totalOrder;
     }
 
-    public Order(OrderType orderType, Member memberDetails, Employee empDetails, OrderDetails orderDetails) {  //memebr
+    public Order(OrderType orderType, Member memberDetails, Employee empDetails, ArrayList<OrderDetails> orderDetails) {  //memebr
         this.orderDate = LocalDate.now();
         this.orderType = orderType;
         this.memberDetails = memberDetails;
         this.empDetails = empDetails;
-        this.orderDetails = orderDetails;
+        this.orderDetails = orderDetails; //Collections.copy(this.orderDetails,orderDetails);
         totalOrder++;
         orderID += totalOrder;
     }
