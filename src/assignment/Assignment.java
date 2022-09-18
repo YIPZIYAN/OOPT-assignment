@@ -5,7 +5,6 @@ import java.util.*;
 import java.awt.Robot;
 import java.awt.AWTException;
 import java.awt.event.KeyEvent;
-import javafx.util.Pair;
 
 public class Assignment {
 
@@ -45,14 +44,13 @@ public class Assignment {
         boolean doneOrder = false;
         int choice = 0;
         boolean continueInput = true;
-
-        clearScreen();
-        System.out.println("Order");
-        System.out.println("--------------------");
-        System.out.println("1 - Start Order");
-        System.out.println("2 - View Cart");
-        System.out.println("3 - Go Back");
         do {
+            clearScreen();
+            System.out.println("Order");
+            System.out.println("--------------------");
+            System.out.println("1 - Start Order");
+            System.out.println("2 - View Cart");
+            System.out.println("3 - Go Back");
             System.out.print("Enter Selection > ");
             choice = getInput(choice);
             scan.nextLine();
@@ -65,9 +63,11 @@ public class Assignment {
                     doneOrder = displayCart(Order.getTotalOrder(), cart);
                     break;
                 case 3:
+                    continueInput = false;
                     break;
                 default:
-                    System.out.println("Invalid Selection!!");
+                    System.err.println("Invalid Selection!!");
+                    syspause.oneSec();
             }
             if (doneOrder) {    //if an order had done, go out of loop
                 continueInput = false;
@@ -75,7 +75,9 @@ public class Assignment {
 
         } while (continueInput);
 
-        Order order = settingBeforePayment(tableNo, cart, member, emp, orderRecord); //get complete order
+        if (doneOrder) {
+            Order order = settingBeforePayment(tableNo, cart, member, emp, orderRecord); //get complete order
+        }
 
     }
 
@@ -341,26 +343,29 @@ public class Assignment {
                 }
             }
         }
+
         return order;
     }
 
-// check voucher   
-//            boolean haveVoucher = false;
-//
-//        System.out.print("Any Voucher? [Y/N] > ");
-//        if (getYesNo()) {
-//            System.out.print("Enter Voucher Code > ");
-//            String voucherCode = scan.nextLine();
-//
-//            for (Voucher i : voucher) {
-//                if (i.checkVoucher(voucherCode)) {
-//                    haveVoucher = true;
-//                    break;
-//                }
-//            }
-//            
-//            if (!haveVoucher) {     //if no such voucher
-//                System.out.println("Invalid Voucher");
-//            }
-//        }
+    public static void payment() {
+
+        boolean invalid;
+        do {
+            invalid = false;
+            boolean haveVoucher = false;
+            System.out.print("Any Voucher? [Y/N]");
+            char voucherChoice = scan.next().charAt(0);
+            switch (Character.toUpperCase(voucherChoice)) {
+                case 'Y':
+                    haveVoucher = true;
+                    break;
+                case 'N':
+                    break;
+                default:
+                    invalid = true;
+                    System.err.println("Invalid Input");
+            }
+        } while (invalid);
+
+    }
 }
