@@ -4,7 +4,6 @@ package assignment;
  *
  * @author Yip Zi Yan
  */
-
 import java.time.LocalDate;
 
 public class Voucher {
@@ -65,21 +64,19 @@ public class Voucher {
     public void setExpireDate(LocalDate expireDate) {
         this.expireDate = expireDate;
     }
-    
-    public boolean checkVoucher(String voucherCode){
-        if(this.voucherCode.equals(voucherCode)){
+
+    public boolean isValid(String voucherCode) {
+        if (this.voucherCode.equals(voucherCode)) {
             if (expireDate.isAfter(LocalDate.now())) {
                 return true;
             }
         }
         return false;
     }
-    
-    public boolean checkMinSpend(double spend){
+
+    public boolean checkMinSpend(double spend) {
         return spend >= minSpend;
     }
-    
-
 
     @Override
     public String toString() {

@@ -77,6 +77,7 @@ public class Assignment {
 
         if (doneOrder) {
             Order order = settingBeforePayment(tableNo, cart, member, emp, orderRecord); //get complete order
+            payment(voucher);
         }
 
     }
@@ -331,10 +332,10 @@ public class Assignment {
                 isMember = false;   //invalid memberID
             }
             if (isMember) {
-                break;  //stop of loop
+                break;  //stop loop
             } else {
                 System.err.println("No Such Member ID!");
-                System.out.print("[T]ry Again/[C]ontinue With No Member? > ");
+                System.out.print("[T]ry Again/[C]ontinue Without Member> > ");
                 char choice = scan.next().charAt(0);
                 if (Character.toUpperCase(choice) == 'T') {
                     isMember = true;
@@ -347,13 +348,15 @@ public class Assignment {
         return order;
     }
 
-    public static void payment() {
+    public static void payment(final Voucher[] voucher) {
 
         boolean invalid;
+        boolean haveVoucher;
+        Voucher applyVoucher;
         do {
             invalid = false;
-            boolean haveVoucher = false;
-            System.out.print("Any Voucher? [Y/N]");
+            haveVoucher = false;
+            System.out.print("Any Voucher? [Y/N] > ");
             char voucherChoice = scan.next().charAt(0);
             switch (Character.toUpperCase(voucherChoice)) {
                 case 'Y':
@@ -366,6 +369,30 @@ public class Assignment {
                     System.err.println("Invalid Input");
             }
         } while (invalid);
+
+        while (haveVoucher) {
+            scan.nextLine();    //buffer
+            System.out.print("Enter Voucher Code > ");
+            String voucherCode = scan.nextLine();
+            for (Voucher i : voucher) {
+                if (i.getVoucherCode().equals(voucherCode.toUpperCase())) { //if same voucher code
+                    applyVoucher = i;   //get the voucher code
+                    haveVoucher = true;
+                    break;
+                }
+                haveVoucher = false;   //invalid voucher code
+            }
+            if (haveVoucher) {  //applied voucher
+                break;  //stop loop
+            } else {
+                System.err.println("No Such Voucher Code!");
+                System.out.print("[T]ry Again/[C]ontinue Without Voucher? > ");
+                char choice = scan.next().charAt(0);
+                if (Character.toUpperCase(choice) == 'T') {
+                    haveVoucher = true;
+                }
+            }
+        }
 
     }
 }
