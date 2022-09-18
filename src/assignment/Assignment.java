@@ -43,7 +43,7 @@ public class Assignment {
 
         boolean doneOrder = false;
         int choice;
-        boolean continueInput = false;
+        boolean continueInput = true;
         do {
             clearScreen();
             System.out.println("Order");
@@ -67,15 +67,13 @@ public class Assignment {
                         break;
                     default:
                         System.out.println("Invalid Selection!!");
-                        continueInput = true;
                 }
                 if (doneOrder) {    //if an order had done, go out of loop
                     continueInput = false;
                 }
             } catch (InputMismatchException ex) {
-                continueInput = true;
                 System.out.println("Try again. Please select 1-3 ");
-                syspause.manySec(2);
+                syspause.manySec(1);
                 scan.nextLine();        //systempause
             }
         } while (continueInput);
