@@ -4,7 +4,10 @@ public class OrderType {
 
     char ordertype;
 
-    public void OrderType(char orderType) {
+    public OrderType() {
+    }
+
+    public OrderType(char orderType) {
         this.ordertype= orderType;
     }
 
@@ -25,7 +28,8 @@ class Takeaway extends OrderType {
     String status;
     
 
-    public void Takeaway() {
+    public Takeaway() {
+        super('T');
         takeAwayNo++;
         this.takeAwayID= "TA"+takeAwayNo;
         this.charges= 3.00;
@@ -46,7 +50,8 @@ class Table extends OrderType {
     String tableId;
     String status;
 
-    public void Table(int tableNo) {
+    public Table(int tableNo) {
+        super('D');
         this.tableNo = tableNo;
         this.tableId = "TAB"+tableNo;
         status="available";

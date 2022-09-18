@@ -4,31 +4,34 @@ package assignment;
  *
  * @author Yip Zi Yan
  */
-
 import java.time.LocalDate;
 
 public class Member {
 
-    private int memberID = 1000;
+    private String memberID;
     private String name;
     private String contactNo;
     private LocalDate birthday;
     private int point = 0;
-    private static int memberCount;
+    private static int memberCount = 1000;
 
     public Member() {
     }
 
     public Member(String name, String contactNo, LocalDate birthday) {
         memberCount++;
-        memberID += memberCount;
+        memberID = "M" + String.format("%03d", memberCount);
         this.name = name;
         this.contactNo = contactNo;
         this.birthday = birthday;
     }
 
-    public int getMemberID() {
+    public String getMemberID() {
         return memberID;
+    }
+
+    public static int getMemberCount() {
+        return memberCount;
     }
 
     public String getName() {
@@ -47,8 +50,8 @@ public class Member {
         return point;
     }
 
-    public void setMemberID(int menberID) {
-        this.memberID = menberID;
+    public static void setMemberCount(int memberCount) {
+        Member.memberCount = memberCount;
     }
 
     public void setName(String name) {
@@ -67,13 +70,13 @@ public class Member {
         this.point = point;
     }
 
-    public boolean validateMember(int memberID) {
-        return this.memberID == memberID;
+    public boolean validateMember(String memberID) {
+        return this.memberID.equals(memberID);
     }
 
     @Override
     public String toString() {
-        return String.format("%-6d %-12s %-13s %-11s %5d", memberID, name, contactNo, birthday, point);
+        return String.format("%-6s %-12s %-13s %-11s %5d", memberID, name, contactNo, birthday, point);
     }
 
 }

@@ -10,23 +10,30 @@ import java.util.ArrayList;
 
 public class Order {
 
-    private int orderID = 1000;
+    private int orderID;
     private LocalDate orderDate;
     private OrderType orderType;
     private ArrayList<OrderDetails> orderDetails;
     private Member memberDetails;
     private Employee empDetails;
-    private static int totalOrder;
+    private static int totalOrder=1000;
 
     public Order() {
-        totalOrder++;
-        orderID += totalOrder;
     }
 
     public Order(OrderType orderType, Member memberDetails, Employee empDetails, ArrayList<OrderDetails> orderDetails) {  //memebr
         this.orderDate = LocalDate.now();
         this.orderType = orderType;
         this.memberDetails = memberDetails;
+        this.empDetails = empDetails;
+        this.orderDetails = orderDetails; //Collections.copy(this.orderDetails,orderDetails);
+        totalOrder++;
+        orderID += totalOrder;
+    }
+
+    public Order(OrderType orderType, Employee empDetails, ArrayList<OrderDetails> orderDetails) {  //non-member
+        this.orderDate = LocalDate.now();
+        this.orderType = orderType;
         this.empDetails = empDetails;
         this.orderDetails = orderDetails; //Collections.copy(this.orderDetails,orderDetails);
         totalOrder++;

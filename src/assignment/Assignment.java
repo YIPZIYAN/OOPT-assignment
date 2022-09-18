@@ -12,6 +12,10 @@ public class Assignment {
 
     public static void main(String[] args) {
 
+        ArrayList<Takeaway> list = new ArrayList<Takeaway>();
+        Table[] tableNo = {new Table(1), new Table(2), new Table(3), new Table(4), new Table(5),
+            new Table(6), new Table(7), new Table(8), new Table(9), new Table(10)};
+
         Employee emp = new Employee("Admin123", 'M', "012-2332232", "123", "Admin", 10000);
         //Menu data - FC
         Menu[] menu = {new Food("Fry Noodle", "F001L", 10.00, 'L'), //arg (name, ID, price, size)
@@ -36,11 +40,10 @@ public class Assignment {
 
         ArrayList<OrderDetails> cart = new ArrayList<OrderDetails>();
         ArrayList<Order> orderRecord = new ArrayList<Order>();
-        //order
-        Order order = new Order();
 
         boolean doneOrder = false;
         int choice;
+        boolean continueInput = false;
         do {
             clearScreen();
             System.out.println("Order");
@@ -48,27 +51,36 @@ public class Assignment {
             System.out.println("1 - Start Order");
             System.out.println("2 - View Cart");
             System.out.println("3 - Go Back");
-            System.out.print("Enter Selection > ");
-            choice = scan.nextInt();
-            scan.nextLine();
-            switch (choice) {
-                case 1:
-                    startOrder(menu, cart);
-                    break;
-                case 2:
-                    doneOrder = displayCart(order.getOrderID(), cart);
-                    break;
-                case 3:
-                    break;
-                default:
-                    System.out.println("Invalid Selection!!");
-            }
-            if (doneOrder) {    //if an order had done, go out of loop
-                break;
-            }
-        } while (choice != 3);
+            try {
+                System.out.print("Enter Selection > ");
+                choice = scan.nextInt();
+                scan.nextLine();
 
-        payment(cart, member, emp, orderRecord);
+                switch (choice) {
+                    case 1:
+                        startOrder(menu, cart);
+                        break;
+                    case 2:
+                        doneOrder = displayCart(Order.getTotalOrder(), cart);
+                        break;
+                    case 3:
+                        break;
+                    default:
+                        System.out.println("Invalid Selection!!");
+                        continueInput = true;
+                }
+                if (doneOrder) {    //if an order had done, go out of loop
+                    continueInput = false;
+                }
+            } catch (InputMismatchException ex) {
+                continueInput = true;
+                System.out.println("Try again. Please select 1-3 ");
+                syspause.manySec(2);
+                scan.nextLine();        //systempause
+            }
+        } while (continueInput);
+
+        Order order = settingBeforePayment(tableNo, cart, member, emp, orderRecord); //get complete order
 
     }
 
@@ -255,17 +267,66 @@ public class Assignment {
         System.out.println("===========================================\n");
     }
 
-    public static void payment(ArrayList<OrderDetails> cart, Member[] member, Employee emp, ArrayList<Order> orderRecord) {
-        System.out.println("[D]ine In/[T]ake away   > ");
-        char orderType = scan.next().charAt(0);
-
+    public static Order settingBeforePayment(Table[] tableNo, ArrayList<OrderDetails> cart, Member[] member, Employee emp, ArrayList<Order> orderRecord) {
+        OrderType orderType = new OrderType();
         Order order = new Order();
-//            OrderType orderType, 
-//                    Member memberDetails, 
-//                    Employee empDetails, 
-//                            ArrayList<OrderDetails> orderDetails
+        System.out.print("[D]ine In/[T]ake away   > ");   //*need a looping or do it in another function
+        char type = scan.next().charAt(0);
+        switch (Character.toUpperCase(type)) {
+            case 'D':
+                System.out.print("Select A Table  > "); //validation needed
+                int table = scan.nextInt();
+                orderType = tableNo[table - 1];
+                break;
+            case 'T':
+                orderType = new Takeaway();
+                break;
+            default:
+                System.err.println("Invalid Input!");
+        }
 
+        boolean isMember = false;
+        System.out.print("Is A Member? [Y/N] > ");    //*need a looping or do it in another function
+        char memberChoice = scan.next().charAt(0);
+        switch (Character.toUpperCase(memberChoice)) {
+            case 'Y':
+                isMember = true;
+                break;
+            case 'N':
+                order = new Order(orderType, emp, cart);
+                break;
+            default:
+                System.err.println("Invalid Input");
+        }
+
+        while (isMember) {
+            scan.nextLine();    //buffer
+            System.out.print("Enter Member ID > ");
+            String memberID = scan.nextLine();
+            for (Member i : member) {
+                if (i.validateMember(memberID)) { //if same member ID
+                    order = new Order(orderType, i, emp, cart); //create object with member
+                    isMember = true;
+                    break;
+                }
+                isMember = false;   //invalid memberID
+            }
+            if (isMember) {
+                break;  //stop of loop
+            } else {
+                System.err.println("No Such Member ID!");
+                System.out.print("[T]ry Again/[C]ontinue With No Member? > ");
+                char choice = scan.next().charAt(0);
+                if (Character.toUpperCase(choice) == 'T') {
+                    isMember = true;
+                } else {
+                    order = new Order(orderType, emp, cart); // create object with no member
+                }
+            }
+        }
+        return order;
     }
+
 // check voucher   
 //            boolean haveVoucher = false;
 //
