@@ -5,6 +5,7 @@ import java.util.*;
 import java.awt.Robot;
 import java.awt.AWTException;
 import java.awt.event.KeyEvent;
+import javafx.util.Pair;
 
 public class Assignment {
 
@@ -42,44 +43,49 @@ public class Assignment {
         ArrayList<Order> orderRecord = new ArrayList<Order>();
 
         boolean doneOrder = false;
-        int choice;
+        int choice = 0;
         boolean continueInput = true;
-        do {
-            clearScreen();
-            System.out.println("Order");
-            System.out.println("--------------------");
-            System.out.println("1 - Start Order");
-            System.out.println("2 - View Cart");
-            System.out.println("3 - Go Back");
-            try {
-                System.out.print("Enter Selection > ");
-                choice = scan.nextInt();
-                scan.nextLine();
 
-                switch (choice) {
-                    case 1:
-                        startOrder(menu, cart);
-                        break;
-                    case 2:
-                        doneOrder = displayCart(Order.getTotalOrder(), cart);
-                        break;
-                    case 3:
-                        break;
-                    default:
-                        System.out.println("Invalid Selection!!");
-                }
-                if (doneOrder) {    //if an order had done, go out of loop
-                    continueInput = false;
-                }
-            } catch (InputMismatchException ex) {
-                System.out.println("Try again. Please select 1-3 ");
-                syspause.manySec(1);
-                scan.nextLine();        //systempause
+        clearScreen();
+        System.out.println("Order");
+        System.out.println("--------------------");
+        System.out.println("1 - Start Order");
+        System.out.println("2 - View Cart");
+        System.out.println("3 - Go Back");
+        do {
+            System.out.print("Enter Selection > ");
+            choice = getInput(choice);
+            scan.nextLine();
+
+            switch (choice) {
+                case 1:
+                    startOrder(menu, cart);
+                    break;
+                case 2:
+                    doneOrder = displayCart(Order.getTotalOrder(), cart);
+                    break;
+                case 3:
+                    break;
+                default:
+                    System.out.println("Invalid Selection!!");
             }
+            if (doneOrder) {    //if an order had done, go out of loop
+                continueInput = false;
+            }
+
         } while (continueInput);
 
         Order order = settingBeforePayment(tableNo, cart, member, emp, orderRecord); //get complete order
 
+    }
+
+    public static int getInput(int input) {
+        try {
+            input = scan.nextInt();
+        } catch (Exception e) {
+            return -1; //invalid
+        }
+        return input;
     }
 
     public static void clearScreen() {
@@ -204,10 +210,6 @@ public class Assignment {
                 cart.add(orderDetails);
             }
         }
-    }
-
-    public static void orderAnItem() {
-
     }
 
     public static boolean displayCart(int orderID, ArrayList<OrderDetails> cart) {
