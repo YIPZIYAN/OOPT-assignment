@@ -151,9 +151,25 @@ public class Assignment {
             itemID = itemID.concat(Character.toString(size)); //get complete id
 
             if (isFood) {   //validation for size input
-                validItem = Character.toString(size).matches("[LR]");
+                if (Character.toString(size).matches("[.LR.]")) {
+                    validItem = true;
+                } else {
+                    validItem = false;
+                    scan.nextLine(); 
+                    System.err.println("Invalid Input.");
+                    System.out.println("Please re-enter "
+                            + "\n[L]arge/[R]egular > ");
+                }
             } else {
-                validItem = Character.toString(size).matches("[IH]");
+                if (Character.toString(size).matches("[.IH.]")) {
+                    validItem = true;
+                } else {
+                    validItem = false;
+                    scan.nextLine(); 
+                    System.err.println("Invalid Input.");
+                    System.out.println("Please re-enter "
+                            + "\n[I]ced/[H]ot > ");
+                }
             }
 
         } while (!validItem);
