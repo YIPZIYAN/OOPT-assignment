@@ -121,9 +121,10 @@ public class Assignment {
 
             System.out.print("Pick An Item      > ");
             itemID = scan.nextLine();
+            itemID = itemID.toUpperCase();
 
             for (Menu i : menu) {   //check item id available
-                if (i.checkItem(itemID.toUpperCase())) {
+                if (i.checkItem(itemID)) {
                     validItem = true;
                     if (i instanceof Food) {
                         isFood = true;
@@ -155,9 +156,9 @@ public class Assignment {
                     validItem = true;
                 } else {
                     validItem = false;
-                    scan.nextLine(); 
+                    scan.nextLine();
                     System.err.println("Invalid Input.");
-                    System.out.println("Please re-enter "
+                    System.out.print("Please re-enter "
                             + "\n[L]arge/[R]egular > ");
                 }
             } else {
@@ -165,9 +166,9 @@ public class Assignment {
                     validItem = true;
                 } else {
                     validItem = false;
-                    scan.nextLine(); 
+                    scan.nextLine();
                     System.err.println("Invalid Input.");
-                    System.out.println("Please re-enter "
+                    System.out.print("Please re-enter "
                             + "\n[I]ced/[H]ot > ");
                 }
             }
