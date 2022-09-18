@@ -123,7 +123,7 @@ public class Assignment {
             itemID = scan.nextLine();
 
             for (Menu i : menu) {   //check item id available
-                if (i.checkItem(itemID)) {
+                if (i.checkItem(itemID.toUpperCase())) {
                     validItem = true;
                     if (i instanceof Food) {
                         isFood = true;
