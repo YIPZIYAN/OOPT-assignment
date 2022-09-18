@@ -53,6 +53,7 @@ public class Assignment {
             switch (choice) {
                 case 1:
                     startOrder(menu, cart);
+                    System.out.println("test");
                     break;
                 case 2:
                     displayCart(order.getOrderID(), cart);
