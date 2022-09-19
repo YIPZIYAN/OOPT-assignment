@@ -65,7 +65,15 @@ public class Voucher {
         this.expireDate = expireDate;
     }
 
-    public boolean isValid(String voucherCode) {
+    public double calculateDiscount(double spend) { //calc discount and check cap value
+        double discount = spend * discountRate;
+        if (discount > capValue) {
+            return capValue;
+        }
+        return discount;
+    }
+
+    public boolean isValid(String voucherCode) {    //check date
         if (this.voucherCode.equals(voucherCode)) {
             if (expireDate.isAfter(LocalDate.now())) {
                 return true;
@@ -74,7 +82,7 @@ public class Voucher {
         return false;
     }
 
-    public boolean checkMinSpend(double spend) {
+    public boolean checkMinSpend(double spend) { //check min spend
         return spend >= minSpend;
     }
 
