@@ -13,14 +13,8 @@ public class Assignment {
 
     public static void main(String[] args) throws InterruptedException {
 
-        //Employee ID and password - Vallerie
-//        HashMap<String, String> loginInfo = new HashMap<>();
-//        loginInfo.put("A1001", "Admin1111");
-//        loginInfo.put("A1002", "Admin2222");
-//        loginInfo.put("A1003", "Staff3333");
-//        loginInfo.put("A1004", "Staff4444");
-//        loginInfo.put("A1005", "Staff5555");
-        //Employee Details
+
+        //Employee Details - Vallerie
         Employee[] empDetails = {new Employee("ZANICE", 'F', "0123456789", "Admin1111", "Manager", 10000.00),
             new Employee("RYAN", 'M', "0178888888", "Admin2222", "Clerk", 3000.00),
             new Employee("XAVIER", 'M', "0138796454", "Staff3333", "Clerk", 3000.00),
@@ -54,14 +48,11 @@ public class Assignment {
 
         ArrayList<OrderDetails> cart = new ArrayList<OrderDetails>();
         ArrayList<Order> orderRecord = new ArrayList<Order>();
-
+        Login login = new Login();
         Employee empInCharge = new Employee();
-
-//        boolean loginSucess;
-//        do {
-//            clearScreen();
-//            loginSucess = login.Login(loginInfo);
-//        } while (!loginSucess);
+        empInCharge = login.Login(empDetails);
+        
+        
         boolean doneOrder = false;
         int choice = 0;
         boolean continueInput = true;
