@@ -94,7 +94,7 @@ public class Assignment {
         } while (continueInput);
 
         if (doneOrder) {
-            Order order = settingBeforePayment(tableNo, cart, member, emp, orderRecord); //get complete order
+            Order order = settingBeforePayment(tableNo, cart, member, empDetails, orderRecord); //get complete order
             payment(voucher);
         }
 
