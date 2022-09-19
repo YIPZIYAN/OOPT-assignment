@@ -14,8 +14,11 @@ public class Login {
     private String id;
     private String password;
     
-    public Login(HashMap<String, String> idPassword) throws InterruptedException {
+    public Login(){
         this.idPassword= idPassword;
+    }
+    
+    public Boolean Login(HashMap<String, String> idPassword) throws InterruptedException {
         
         int error = 0;
         Thread.sleep(100);
@@ -47,16 +50,20 @@ public class Login {
                 if(idPassword.get(id.toUpperCase()).equals(password)){        //check the id matches the password
                     System.out.println("Login successful");
                     error = 0;
-                    //to other page
+                    return true;
                 }
                 else{
                     System.out.println("Wrong password entered\n");
+                    syspause.oneSec();                    
                     error = 1;
+                    return false;
                 }
             }
             else{
                 System.out.println("Please enter a valid Staff ID\n");
                 error = 1;
+                syspause.oneSec();
+                return false;
             }
         }while(error != 0);
     
