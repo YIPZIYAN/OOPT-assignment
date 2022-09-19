@@ -3,10 +3,9 @@ package assignment;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-//getRuntime(). exec("cls");
 /**
  *
- * @author End User
+ * @author Vallerie
  */
 public class Admin extends Employee{
     
@@ -197,3 +196,4 @@ public class Admin extends Employee{
     
     
 }
+
