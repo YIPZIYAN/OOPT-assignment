@@ -3,16 +3,20 @@ package assignment;
 import java.util.HashMap;
 import java.util.Scanner;
 
-public class Login {
 
+/**
+ *
+ * @Vallerie 
+ */
+public class Login {
     HashMap<String, String> idPassword = new HashMap<String, String>();
     Scanner input = new Scanner(System.in);
     private String id;
     private String password;
-
+    
     public Login(HashMap<String, String> idPassword) throws InterruptedException {
-        this.idPassword = idPassword;
-
+        this.idPassword= idPassword;
+        
         int error = 0;
         Thread.sleep(100);
         System.out.println("          AAA         BBBBBBBBB         CCCCCCCCCCC");
@@ -30,29 +34,31 @@ public class Login {
         System.out.println("    AAA         AAA   BBBBBBBBBBB       CCCCCCCCCCC    ");
         System.out.println("");
         Thread.sleep(100);
-        do {
+        do{
             System.out.print("Enter your Staff ID: ");
             id = input.nextLine();
             System.out.print("Enter your password: ");
             password = input.nextLine();
-
+        
             HashMap<String, String> inputIDPass = new HashMap<String, String>();
             inputIDPass.put(id, password);
-
-            if (idPassword.containsKey(id)) {
-                if (idPassword.get(id).equals(password)) {
+        
+            if(idPassword.containsKey(id.toUpperCase())){                     //check whether the entered id is valid
+                if(idPassword.get(id.toUpperCase()).equals(password)){        //check the id matches the password
                     System.out.println("Login successful");
                     error = 0;
                     //to other page
-                } else {
-                    System.out.println("Wrong password entered");
+                }
+                else{
+                    System.out.println("Wrong password entered\n");
                     error = 1;
                 }
-            } else {
-                System.out.println("Please enter a valid Staff ID");
+            }
+            else{
+                System.out.println("Please enter a valid Staff ID\n");
                 error = 1;
             }
-        } while (error != 0);
-
+        }while(error != 0);
+    
     }
-}
+    }
