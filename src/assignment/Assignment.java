@@ -26,10 +26,6 @@ public class Assignment {
                                  new Employee("XAVIER", 'M', "0138796454", "Staff3333", "Clerk", 3000.00),
                                  new Employee("WINSON", 'M', "0189764533", "Staff4444", "Clerk", 3000.00),
                                  new Employee("VANESSA", 'F', "0135437755", "Staff5555", "Clerk", 3000.00)};
-        
-
-        Login login = new Login(loginInfo);
-        Admin.Admin(empDetails);
 
         ArrayList<Takeaway> list = new ArrayList<Takeaway>();
         Table[] tableNo = {new Table(1), new Table(2), new Table(3), new Table(4), new Table(5),
@@ -58,6 +54,10 @@ public class Assignment {
 
         ArrayList<OrderDetails> cart = new ArrayList<OrderDetails>();
         ArrayList<Order> orderRecord = new ArrayList<Order>();
+        Login login = new Login(loginInfo);
+        
+        
+       
 
         boolean doneOrder = false;
         int choice = 0;
