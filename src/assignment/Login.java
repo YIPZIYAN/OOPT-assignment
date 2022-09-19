@@ -79,7 +79,7 @@ public class Login {
                 }
             }else{
                 System.err.println("Staff ID entered does not exist\n");
-
+                System.out.flush();
             }
             
             System.out.println("Press Enter To Continue...");
