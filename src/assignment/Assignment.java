@@ -100,7 +100,7 @@ public class Assignment {
             } catch (Exception e) { //invalid
                 System.err.println("Invalid input.");
                 scan.nextLine();
-                System.out.println("Enter L/R only    > ");
+                System.out.println("Please Re-enter   > ");
 
             }
         } while (continueInput);
