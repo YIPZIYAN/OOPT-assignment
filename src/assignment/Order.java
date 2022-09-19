@@ -16,7 +16,7 @@ public class Order {
     private ArrayList<OrderDetails> orderDetails;
     private Member memberDetails;
     private Employee empDetails;
-    private static int totalOrder=1000;
+    private static int totalOrder = 1000;
 
     public Order() {
     }
@@ -94,6 +94,14 @@ public class Order {
 
     public static void setTotalOrder(int totalOrder) {
         Order.totalOrder = totalOrder;
+    }
+
+    public static double calculateSubtotal(ArrayList<OrderDetails> orderDetails) {
+        double subtotal = 0;
+        for (OrderDetails i : orderDetails) {
+            subtotal += i.getQuantity() * i.getOrderList().price;
+        }
+        return subtotal;
     }
 
     @Override

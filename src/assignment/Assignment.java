@@ -5,27 +5,27 @@ import java.util.*;
 import java.awt.Robot;
 import java.awt.AWTException;
 import java.awt.event.KeyEvent;
+import java.io.Console;
 
 public class Assignment {
 
     static Scanner scan = new Scanner(System.in);
 
     public static void main(String[] args) throws InterruptedException {
-        
-         //Employee ID and password - Vallerie
-        HashMap<String, String> loginInfo = new HashMap<>();
-        loginInfo.put("A1001", "Admin1111");
-        loginInfo.put("A1002", "Admin2222");
-        loginInfo.put("A1003", "Staff3333");
-        loginInfo.put("A1004", "Staff4444");
-        loginInfo.put("A1005", "Staff5555");    
-        
+
+        //Employee ID and password - Vallerie
+//        HashMap<String, String> loginInfo = new HashMap<>();
+//        loginInfo.put("A1001", "Admin1111");
+//        loginInfo.put("A1002", "Admin2222");
+//        loginInfo.put("A1003", "Staff3333");
+//        loginInfo.put("A1004", "Staff4444");
+//        loginInfo.put("A1005", "Staff5555");
         //Employee Details
         Employee[] empDetails = {new Employee("ZANICE", 'F', "0123456789", "Admin1111", "Manager", 10000.00),
-                                 new Employee("RYAN", 'M', "0178888888", "Admin2222", "Clerk", 3000.00),
-                                 new Employee("XAVIER", 'M', "0138796454", "Staff3333", "Clerk", 3000.00),
-                                 new Employee("WINSON", 'M', "0189764533", "Staff4444", "Clerk", 3000.00),
-                                 new Employee("VANESSA", 'F', "0135437755", "Staff5555", "Clerk", 3000.00)};
+            new Employee("RYAN", 'M', "0178888888", "Admin2222", "Clerk", 3000.00),
+            new Employee("XAVIER", 'M', "0138796454", "Staff3333", "Clerk", 3000.00),
+            new Employee("WINSON", 'M', "0189764533", "Staff4444", "Clerk", 3000.00),
+            new Employee("VANESSA", 'F', "0135437755", "Staff5555", "Clerk", 3000.00)};
 
         ArrayList<Takeaway> list = new ArrayList<Takeaway>();
         Table[] tableNo = {new Table(1), new Table(2), new Table(3), new Table(4), new Table(5),
@@ -54,19 +54,14 @@ public class Assignment {
 
         ArrayList<OrderDetails> cart = new ArrayList<OrderDetails>();
         ArrayList<Order> orderRecord = new ArrayList<Order>();
-        Login login = new Login();
-        Employee empInCharge = new Employee();
-        
-        boolean loginSucess;
-        
-        do{
-            clearScreen();
-            loginSucess = login.Login(loginInfo);
-        }while (!loginSucess);
-        
-        
-       
 
+        Employee empInCharge = new Employee();
+
+//        boolean loginSucess;
+//        do {
+//            clearScreen();
+//            loginSucess = login.Login(loginInfo);
+//        } while (!loginSucess);
         boolean doneOrder = false;
         int choice = 0;
         boolean continueInput = true;
@@ -75,11 +70,11 @@ public class Assignment {
             System.out.println("Order");
             System.out.println("--------------------");
             System.out.println("1 - Start Order");
-            System.out.println("2 - View Cart");
+            System.out.println("2 - View Cart"); //just for use of checking
             System.out.println("3 - Go Back");
             System.out.print("Enter Selection > ");
             choice = getInput(choice);
-            scan.nextLine();
+            scan.nextLine(); // buffer
 
             switch (choice) {
                 case 1:
@@ -93,7 +88,8 @@ public class Assignment {
                     break;
                 default:
                     System.err.println("Invalid Selection!!");
-                    syspause.oneSec();
+                    System.err.flush();
+                    systemPause();
             }
             if (doneOrder) {    //if an order had done, go out of loop
                 continueInput = false;
@@ -103,7 +99,7 @@ public class Assignment {
 
         if (doneOrder) {
             Order order = settingBeforePayment(tableNo, cart, member, empInCharge, orderRecord); //get complete order
-            payment(voucher,order);
+            payment(voucher, order);
         }
 
     }
@@ -116,23 +112,21 @@ public class Assignment {
         }
         return input;
     }
-    
-    public static char getInput(char input) {  //exception handling for char input
-        boolean continueInput = true;
-        do {
-            try {
-                input = scan.next(".").charAt(0);
-                continueInput = false;
-            } catch (Exception e) { //invalid
-                System.err.println("Invalid input.");
-                scan.nextLine();
-                System.out.println("Please Re-enter   > ");
 
-            }
-        } while (continueInput);
+    public static char getInput(char input) {  //exception handling for char input
+        try {
+            input = scan.next(".").charAt(0);
+        } catch (Exception e) { //invalid
+            return 0; //return null
+        }
         return input;
+
     }
-    
+
+    public static void systemPause() {
+        System.out.println("Press Enter To Continue...");
+        scan.nextLine();
+    }
 
     public static void clearScreen() {
         try {
@@ -390,7 +384,8 @@ public class Assignment {
 
         return order;
     }
-            //emp prob
+
+    //emp prob
     public static void payment(final Voucher[] voucher, Order order) {
 
         boolean invalid;
@@ -436,16 +431,12 @@ public class Assignment {
                 }
             }
         }
-        
-        
+
         //date available
-        
         //loop order.cart add up subtotal, then compare
 //        if (applyVoucher.getMinSpent()) {
 //            
 //        } //
-        
         //discount rate
-
     }
 }
