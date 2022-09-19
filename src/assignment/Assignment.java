@@ -11,12 +11,26 @@ public class Assignment {
     static Scanner scan = new Scanner(System.in);
 
     public static void main(String[] args) {
+        
+         //Employee ID and password - Vallerie
+        HashMap<String, String> loginInfo = new HashMap<String, String>();
+        loginInfo.put("A1001", "Admin1111");
+        loginInfo.put("A1002", "Admin2222");
+        loginInfo.put("A1003", "Staff3333");
+        loginInfo.put("A1004", "Staff4444");
+        loginInfo.put("A1005", "Staff5555");    
+        
+        //Employee Details
+        Employee[] empDetails = {new Employee("ZANICE", 'F', "0123456789", "Admin1111", "Manager", 10000.00),
+                                 new Employee("RYAN", 'M', "0178888888", "Admin2222", "Clerk", 3000.00),
+                                 new Employee("XAVIER", 'M', "0138796454", "Staff3333", "Clerk", 3000.00),
+                                 new Employee("WINSON", 'M', "0189764533", "Staff4444", "Clerk", 3000.00),
+                                 new Employee("VANESSA", 'F', "0135437755", "Staff5555", "Clerk", 3000.00)};
 
         ArrayList<Takeaway> list = new ArrayList<Takeaway>();
         Table[] tableNo = {new Table(1), new Table(2), new Table(3), new Table(4), new Table(5),
             new Table(6), new Table(7), new Table(8), new Table(9), new Table(10)};
 
-        Employee emp = new Employee("Admin123", 'M', "012-2332232", "123", "Admin", 10000);
         //Menu data - FC
         Menu[] menu = {new Food("Fry Noodle", "F001L", 10.00, 'L'), //arg (name, ID, price, size)
             new Food("Fry Noodle", "F001R", 8.00, 'R'), // R = Regular Size
@@ -40,6 +54,18 @@ public class Assignment {
 
         ArrayList<OrderDetails> cart = new ArrayList<OrderDetails>();
         ArrayList<Order> orderRecord = new ArrayList<Order>();
+        Login login = new Login();
+        
+        boolean loginSucess;
+        
+        do{
+            scan.nextLine();
+            clearScreen();
+            loginSucess = login.Login(loginInfo);
+        }while (!loginSucess);
+        
+        
+       
 
         boolean doneOrder = false;
         int choice = 0;
@@ -76,7 +102,7 @@ public class Assignment {
         } while (continueInput);
 
         if (doneOrder) {
-            Order order = settingBeforePayment(tableNo, cart, member, emp, orderRecord); //get complete order
+            Order order = settingBeforePayment(tableNo, cart, member, empDetails, orderRecord); //get complete order
             payment(voucher);
         }
 
