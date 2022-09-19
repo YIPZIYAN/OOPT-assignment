@@ -74,7 +74,6 @@ public class Assignment {
             System.out.println("3 - Go Back");
             System.out.print("Enter Selection > ");
             choice = getInput(choice);
-            scan.nextLine(); // buffer
 
             switch (choice) {
                 case 1:
@@ -107,6 +106,7 @@ public class Assignment {
     public static int getInput(int input) { //exception handling for int input
         try {
             input = scan.nextInt();
+            scan.nextLine(); //buffer
         } catch (Exception e) {
             return -1; //invalid
         }
@@ -116,6 +116,7 @@ public class Assignment {
     public static char getInput(char input) {  //exception handling for char input
         try {
             input = scan.next(".").charAt(0);
+            scan.nextLine(); //buffer
         } catch (Exception e) { //invalid
             return 0; //return null
         }
@@ -125,6 +126,7 @@ public class Assignment {
 
     public static void systemPause() {
         System.out.println("Press Enter To Continue...");
+        scan.nextLine();
         scan.nextLine();
     }
 
@@ -261,6 +263,7 @@ public class Assignment {
         System.out.println("Order ID : " + orderID);
         if (cart.isEmpty()) { //if empty
             System.err.println("Cart Is Empty!");
+            System.err.flush();
             System.out.println("Press Enter To Go Back...");
             scan.nextLine();
             return false;
@@ -284,19 +287,22 @@ public class Assignment {
         System.out.println("==========================================================");
         System.out.printf("Total = RM %.2f\n", subtotal);
 
-        char cont;
+        char cont = 0; //initialize null
+        boolean valid;
         do {
+            valid = true;
             System.out.print("Make Payment? [Y/N] > ");
-            cont = scan.next().charAt(0);
+            cont = getInput(cont);
             switch (Character.toUpperCase(cont)) {
                 case 'Y':
                     return true;
                 case 'N':
                     break;
                 default:
+                    valid = false;
                     System.err.println("Invalid Input");
             }
-        } while (Character.toUpperCase(cont) != 'Y' || Character.toUpperCase(cont) != 'N');
+        } while (!valid);
         return false;
     }
 
@@ -327,20 +333,27 @@ public class Assignment {
     public static Order settingBeforePayment(Table[] tableNo, ArrayList<OrderDetails> cart, Member[] member, Employee emp, ArrayList<Order> orderRecord) {
         OrderType orderType = new OrderType();
         Order order = new Order();
-        System.out.print("[D]ine In/[T]ake away   > ");   //*need a looping or do it in another function
-        char type = scan.next().charAt(0);
-        switch (Character.toUpperCase(type)) {
-            case 'D':
-                System.out.print("Select A Table  > "); //validation needed
-                int table = scan.nextInt();
-                orderType = tableNo[table - 1];
-                break;
-            case 'T':
-                orderType = new Takeaway();
-                break;
-            default:
-                System.err.println("Invalid Input!");
-        }
+        char type = 0; //initialize null
+        boolean valid;
+
+        do {
+            valid = true;
+            System.out.print("[D]ine In/[T]ake away   > ");   //*need a looping or do it in another function
+            type = getInput(type);
+            switch (Character.toUpperCase(type)) {
+                case 'D':
+                    System.out.print("Select A Table  > "); //validation needed
+                    int table = scan.nextInt();
+                    orderType = tableNo[table - 1];
+                    break;
+                case 'T':
+                    orderType = new Takeaway();
+                    break;
+                default:
+                    valid = false;
+                    System.err.println("Invalid Input!");
+            }
+        } while (!valid);
 
         boolean isMember = false;
         System.out.print("Is A Member? [Y/N] > ");    //*need a looping or do it in another function
