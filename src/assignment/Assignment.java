@@ -82,7 +82,7 @@ public class Assignment {
 
     }
 
-    public static int getInput(int input) {
+    public static int getInput(int input) { //exception handling for int input
         try {
             input = scan.nextInt();
         } catch (Exception e) {
@@ -90,6 +90,23 @@ public class Assignment {
         }
         return input;
     }
+    
+    public static char getInput(char input) {  //exception handling for char input
+        boolean continueInput = true;
+        do {
+            try {
+                input = scan.next(".").charAt(0);
+                continueInput = false;
+            } catch (Exception e) { //invalid
+                System.err.println("Invalid input.");
+                scan.nextLine();
+                System.out.println("Please Re-enter   > ");
+
+            }
+        } while (continueInput);
+        return input;
+    }
+    
 
     public static void clearScreen() {
         try {
@@ -117,7 +134,7 @@ public class Assignment {
         boolean isBeverage = false;
 
         String itemID;
-        char size;
+        char size = 'x';
 
         Menu orderItem = new Menu(); //get the ordered menu details
         int qtyOrder = 0;
@@ -156,7 +173,7 @@ public class Assignment {
 
         do { //ask user select variation ([L/R][I/H])
             validItem = false;
-            size = scan.next().charAt(0);
+            size = getInput(size);
             size = Character.toUpperCase(size); // change to upper case
             itemID = itemID.concat(Character.toString(size)); //get complete id
 
