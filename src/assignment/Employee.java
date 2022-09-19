@@ -88,9 +88,6 @@ public class Employee {
         return empCount;
     }
     
-    public void login(String empID, String password){
-        //////
-    }
     
     @Override
     public String toString(){
