@@ -400,13 +400,16 @@ public class Assignment {
 
     //emp prob
     public static void payment(final Voucher[] voucher, Order order) {
-
-        boolean invalid;
-        boolean haveVoucher;
+        char choice = 'c';
+        boolean invalid, haveVoucher, vValidDate, vMinSpend;
+        boolean toEpay = false;
+        boolean toCashpay = false;
         Voucher applyVoucher;
         do {
             invalid = false;
+            vValidDate = false;
             haveVoucher = false;
+            vMinSpend = false;
             System.out.print("Any Voucher? [Y/N] > ");
             char voucherChoice = scan.next().charAt(0);
             switch (Character.toUpperCase(voucherChoice)) {
@@ -418,38 +421,87 @@ public class Assignment {
                 default:
                     invalid = true;
                     System.err.println("Invalid Input");
+                    System.err.flush();
             }
         } while (invalid);
 
         while (haveVoucher) {
             scan.nextLine();    //buffer
-            System.out.print("Enter Voucher Code > ");
-            String voucherCode = scan.nextLine();
-            for (Voucher i : voucher) {
-                if (i.getVoucherCode().equals(voucherCode.toUpperCase())) { //if same voucher code
-                    applyVoucher = i;   //get the voucher code
-                    haveVoucher = true;
-                    break;
+            do {
+                System.out.print("Enter Voucher Code > ");
+                String voucherCode = scan.nextLine();
+                for (Voucher i : voucher) {
+                    if (i.getVoucherCode().equals(voucherCode.toUpperCase())) { //check voucher exist or nt       
+                        applyVoucher = i;                                   //get the voucher code
+                        haveVoucher = true;
+                        vValidDate = i.isValid(voucherCode);                //check voucher date valid or nt
+                        vMinSpend = i.checkMinSpend(order.calculateSubtotal(order.getOrderDetails()));                      //check for minSpend
+                        break;
+                    } else {
+                        haveVoucher = false;
+                    }
                 }
-                haveVoucher = false;   //invalid voucher code
-            }
-            if (haveVoucher) {  //applied voucher
-                break;  //stop loop, code here**
-            } else {
-                System.err.println("No Such Voucher Code!");
+                if (!haveVoucher) {
+                    System.err.println("No Such Voucher Code!");
+                } else if (haveVoucher && !vValidDate) {
+                    System.err.println("Voucher Code Expired!");
+                } else if (!vMinSpend) {
+                    System.err.println("Did Not Meet Minimum Purchase");
+                }
+                System.err.flush();
                 System.out.print("[T]ry Again/[C]ontinue Without Voucher? > ");
-                char choice = scan.next().charAt(0);
-                if (Character.toUpperCase(choice) == 'T') {
-                    haveVoucher = true;
-                }
-            }
+                choice = getInput(choice);
+            } while (choice == 'T' || choice == 't');
         }
 
-        //date available
-        //loop order.cart add up subtotal, then compare
-//        if (applyVoucher.getMinSpent()) {
-//            
-//        } //
-        //discount rate
+        do {
+//            double subtotal = 0;            
+//            for (int i = 0; i < cart.size(); i++) {
+//                try {
+//                    if (cart.get(i).getOrderList().itemName.equals(cart.get(i - 1).getOrderList().itemName)) {
+//                        System.out.println(cart.get(i).displaySameOrderDetails());
+//                    } else {
+//                        System.out.println(cart.get(i));
+//                    }
+//                } catch (Exception e) {
+//                    System.out.println(cart.get(i));
+//                } finally {
+//                    subtotal += cart.get(i).calculateSubtotal(); //add total
+//                }
+//            }
+
+            System.out.println("   Subtotal(RM) : ");          //display amount for payment
+            System.out.println("   Discount(RM) : ");
+            System.out.println("Grand Total(RM) : ");
+            System.out.println("Please select payment method");//select payment option
+            System.out.println("[E]-wallet/[C]ash");
+            choice = getInput(choice);
+            switch (Character.toUpperCase(choice)) {
+                case 'E':
+                    toEpay = true;
+                    break;
+                case 'C':
+                    toCashpay = true;
+                    break;
+                default:
+                    System.err.println("Voucher Code Expired!");
+                    System.err.flush();
+            }
+        } while (choice != 'E' || choice != 'C');
+
+        if (toEpay) {
+            do {
+                System.out.println("Confirm payment > ");
+                choice = getInput(choice);
+            } while (choice != 'Y');
+        }
+        //payment objct non para cons
+        if (toCashpay) {
+            do {
+                System.out.println("Enter Cash Received > ");
+                double cashReceived = scan.nextDouble();
+            } while (choice != 'Y');  //here need to validate the amount must be more than grandtotal
+        }
+        //save the payment details into the object
     }
 }
