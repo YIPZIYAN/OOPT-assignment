@@ -10,7 +10,7 @@ public class Assignment {
 
     static Scanner scan = new Scanner(System.in);
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         
          //Employee ID and password - Vallerie
         HashMap<String, String> loginInfo = new HashMap<>();
@@ -59,11 +59,10 @@ public class Assignment {
         
         boolean loginSucess;
         
-//        do{
-//            scan.nextLine();
-//            clearScreen();
-//            loginSucess = login.Login(loginInfo);
-//        }while (!loginSucess);
+        do{
+            clearScreen();
+            loginSucess = login.Login(loginInfo);
+        }while (!loginSucess);
         
         
        
