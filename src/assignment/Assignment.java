@@ -54,7 +54,15 @@ public class Assignment {
 
         ArrayList<OrderDetails> cart = new ArrayList<OrderDetails>();
         ArrayList<Order> orderRecord = new ArrayList<Order>();
-        Login login = new Login(loginInfo);
+        Login login = new Login();
+        
+        boolean loginSucess;
+        
+        do{
+            scan.nextLine();
+            clearScreen();
+            loginSucess = login.Login(loginInfo);
+        }while (!loginSucess);
         
         
        
