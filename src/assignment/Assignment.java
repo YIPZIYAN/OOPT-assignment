@@ -606,12 +606,9 @@ public static Payment payment(final Voucher[] voucher, Order order, ArrayList<Or
             System.out.println("    Changes(RM) : " + String.format("%.2f", ((Cash)pay).getChange()));
         }
         return pay;
-<<<<<<< HEAD
         //save the payment details into the object
 
 //                QRcode.displayQRcode();
-=======
 
->>>>>>> 15d796ee8775f00018f7af6e15e71fc078ba6dd2
     }
 }
