@@ -8,7 +8,7 @@ public class Employee {
     private String password;
     private String position;
     private double salary;
-    private static int empCount = 5;
+    private static int empCount = 0;
 
     public Employee() {
         this.empID = "A1" + String.format("%03d", empCount);
