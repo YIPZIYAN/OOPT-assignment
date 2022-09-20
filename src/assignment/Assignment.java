@@ -434,7 +434,7 @@ public class Assignment {
     }
 
     //emp prob
-public static void payment(final Voucher[] voucher, Order order, ArrayList<OrderDetails> cart) {
+public static Payment payment(final Voucher[] voucher, Order order, ArrayList<OrderDetails> cart) {
         char choice = 'c';
         boolean invalid, haveVoucher, vValidDate, vMinSpend;
         boolean toEpay = false;
@@ -535,6 +535,7 @@ public static void payment(final Voucher[] voucher, Order order, ArrayList<Order
                 System.out.println("Confirm payment > ");
                 choice = getInput(choice);
             } while (choice != 'Y');
+            return epay;
         }
 
         if (toCashpay) {
@@ -548,6 +549,7 @@ public static void payment(final Voucher[] voucher, Order order, ArrayList<Order
             } while (!finishPay);  //here need to validate the amount must be more than grandtotal
 
             System.out.println("    Changes(RM) : " + String.format("%.2f", cpay.getChange()));
+            return cpay;
         }
 
     }
