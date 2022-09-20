@@ -464,8 +464,10 @@ public static Payment payment(final Voucher[] voucher, Order order, ArrayList<Or
         boolean invalid, haveVoucher, vValidDate, vMinSpend;
         boolean toEpay = false;
         boolean toCashpay = false;
-        Payment epay = new Ewallet();
-        Payment cpay = new Cash();
+        double passSubtotal=0;
+        char epayMethod = 'x';
+        Payment pay;
+
         Voucher applyVoucher = new Voucher();
         do {
             invalid = false;
@@ -535,9 +537,9 @@ public static Payment payment(final Voucher[] voucher, Order order, ArrayList<Or
             System.out.println("   Subtotal(RM) : " + String.format("%.2f", subtotal));          //display amount for payment
             if (haveVoucher) {
                 System.out.println("   Discount(RM) : " + String.format("%.2f", applyVoucher.calculateDiscount(subtotal)));
-                System.out.println("Grand Total(RM) : " + String.format("%.2f", epay.calculateGrandTotal()));
+                System.out.println("Grand Total(RM) : " + String.format("%.2f", pay.calculateGrandTotal()));
             } else {
-                System.out.println("Grand Total(RM) : " + String.format("%.2f", epay.calculateGrandTotal()));
+                System.out.println("Grand Total(RM) : " + String.format("%.2f", pay.calculateGrandTotal()));
             }
             System.out.println("Please select payment method");//select payment option
             System.out.println("[E]-wallet/[C]ash");
@@ -545,37 +547,65 @@ public static Payment payment(final Voucher[] voucher, Order order, ArrayList<Or
             switch (Character.toUpperCase(choice)) {
                 case 'E':
                     toEpay = true;
+                    passSubtotal = subtotal;
                     break;
                 case 'C':
                     toCashpay = true;
+                    passSubtotal = subtotal;
                     break;
                 default:
-                    System.err.println("Voucher Code Expired!");
+                    System.err.println("Invalid Input!");
                     System.err.flush();
             }
+
         } while (choice != 'E' || choice != 'C');
 
-        if (toEpay) {
+        if (toEpay) 
             do {
+                System.out.println("Choose platform");
+                System.out.println("1. GrabPay");
+                System.out.println("2. Touch'N'Go");
+                epayMethod = getInput(epayMethod);
+                switch (epayMethod) {
+                    case 1:
+                        if (haveVoucher) {
+                            pay= new Ewallet("GRABPAY", "A12345", "REFERENCE", passSubtotal, applyVoucher.getDiscountRate());
+                        } else {
+                            pay= new Ewallet("GRABPAY", "A12345", "REFERENCE", passSubtotal);
+                        }
+                        break;
+                    case 2:
+                        if (haveVoucher) {
+                            pay = new Ewallet("TOUCHNGO", "A12345", "REFERENCE", passSubtotal, applyVoucher.getDiscountRate());
+                        } else {
+                            pay = new Ewallet("TOUCHNGO", "A12345", "REFERENCE", passSubtotal);
+                        }
+                        break;
+                    default:
+                        System.err.println("Invalid Input!");
+                        System.err.flush();
+                }
+
                 System.out.println("Confirm payment > ");
                 choice = getInput(choice);
             } while (choice != 'Y');
-            return epay;
-        }
 
         if (toCashpay) {
             boolean finishPay = false;
-
+            pay = new Cash();
             do {
                 System.out.println("Enter Cash Received > ");
                 double cashReceived = scan.nextDouble();
-                cpay(cashReceived, subtotal, applyVoucher.getDiscountRate());
-                finishPay = cpay.checkAmount();
+                finishPay = ((Cash)pay).checkAmount();
+                if (haveVoucher)
+                    pay = new Cash(cashReceived, passSubtotal, applyVoucher.getDiscountRate());
+                else 
+                    pay= new Cash(cashReceived, passSubtotal);
             } while (!finishPay);  //here need to validate the amount must be more than grandtotal
 
-            System.out.println("    Changes(RM) : " + String.format("%.2f", cpay.getChange()));
-            return cpay;
+            System.out.println("    Changes(RM) : " + String.format("%.2f", ((Cash)pay).getChange()));
         }
+        return pay;
 <<<<<<< HEAD
         //save the payment details into the object
 
