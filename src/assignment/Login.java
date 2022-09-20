@@ -24,23 +24,7 @@ public class Login {
         int correctPassword;
         int error;
         
-        syspause.manySec(1);
-        System.out.println("          AAA         BBBBBBBBB         CCCCCCCCCC");
-        syspause.manySec(1);
-        System.out.println("         AA AA        BB       BB     CC          CC");
-        syspause.manySec(1);
-        System.out.println("        AA   AA       BB        BB   CC");
-        syspause.manySec(1);
-        System.out.println("       AA     AA      BBBBBBBBBBB    CC");
-        syspause.manySec(1);
-        System.out.println("      AAAAAAAAAAA     BB        BB   CC");
-        syspause.manySec(1);
-        System.out.println("     AA         AA    BB        BB    CC          CC");
-        syspause.manySec(1);
-        System.out.println("    AAA         AAA   BBBBBBBBBBB       CCCCCCCCCC    ");
-        syspause.manySec(2);
-        Assignment.clearScreen();
-        Assignment.clearScreen();
+
 
         do {
             Assignment.clearScreen();
