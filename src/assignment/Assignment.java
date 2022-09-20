@@ -63,7 +63,7 @@ public class Assignment {
             clearScreen();
             valid = true;
             System.out.println("\n\tABC Cafe POS System\n");
-            System.out.println("Employee In Charge : "+empInCharge.getName()+"\nDate : " + LocalDate.now() + LocalDate.now(clock));
+            System.out.println("Employee In Charge : "+empInCharge.getName()+"\nDate : " + new Date());
             System.out.println("\n           Main Menu");
             System.out.println("------------------------------");
             System.out.println("1 - Order");
