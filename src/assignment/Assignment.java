@@ -13,6 +13,11 @@ public class Assignment {
 
     public static void main(String[] args) throws InterruptedException {
 
+//        QRcode qr;
+//        qr = QRcode.displayQRcode();
+//        System.out.println("enter smtg..");
+//        scan.nextLine();
+//        QRcode.closeQRcode(qr);
         //Employee Details - Vallerie
         Employee[] empDetails = {new Employee("ZANICE", 'F', "0123456789", "Admin1111", "Manager", 10000.00),
             new Employee("RYAN", 'M', "0178888888", "Admin2222", "Clerk", 3000.00),
@@ -51,48 +56,68 @@ public class Assignment {
         Login login = new Login();
 
         Employee empInCharge;
-
-        empInCharge = login.Login(empDetails);
-
-        boolean doneOrder = false;
+        empInCharge = login.Login(empDetails);  //login and get emp in charge details
         int choice = 0;
-        boolean continueInput = true;
+        boolean valid;
         do {
             clearScreen();
-            System.out.println("Order");
-            System.out.println("--------------------");
-            System.out.println("1 - Start Order");
-            System.out.println("2 - View Cart"); //just for use of checking
-            System.out.println("3 - Go Back");
+            valid = true;
+            System.out.println("\n\tABC Cafe POS System\n");
+            System.out.println("Employee In Charge : "+empInCharge.getName()+"\nDate : " + LocalDate.now() + LocalDate.now(clock));
+            System.out.println("\n           Main Menu");
+            System.out.println("------------------------------");
+            System.out.println("1 - Order");
+            System.out.println("2 - Menu");
+            System.out.println("3 - Member"); //just for use of checking
+            System.out.println("4 - Voucher");
+            System.out.println("5 - Summary");
+            System.out.println("\n0 - Exit");
             System.out.print("Enter Selection > ");
             choice = getInput(choice);
             switch (choice) {
                 case 1:
-                    startOrder(menu, cart);
                     break;
                 case 2:
-                    doneOrder = displayCart(Order.getTotalOrder(), cart);
                     break;
                 case 3:
-                    continueInput = false;
+                    break;
+                case 4:
+                    break;
+                case 5:
+                    break;
+                case 0:
                     break;
                 default:
-                    System.err.println("Invalid Selection!!");
+                    valid = false;
+                    System.err.println("Invalid Input!");
                     System.err.flush();
-                    systemPause();
             }
-            if (doneOrder) {    //if an order had done, go out of loop
-                continueInput = false;
-            }
-
-        } while (continueInput);
-
-        if (doneOrder) {
-            Order order = settingBeforePayment(tableNo, cart, member, empInCharge, orderRecord); //get complete order
-            payment(voucher, order);
-        }
+        } while (!valid);
 
     }
+    //        boolean doneOrder = false;
+    //            switch (choice) {
+//                case 1:
+//                    startOrder(menu, cart);
+//                    break;
+//                case 2:
+//                    doneOrder = displayCart(Order.getTotalOrder(), cart);
+//                    break;
+//                case 3:
+//                    continueInput = false;
+//                    break;
+//                default:
+//                    System.err.println("Invalid Selection!!");
+//                    System.err.flush();
+//                    systemPause();
+//            }
+//            if (doneOrder) {    //if an order had done, go out of loop
+//                continueInput = false;
+//            }
+//            if (doneOrder) {
+//            Order order = settingBeforePayment(tableNo, cart, member, empInCharge, orderRecord); //get complete order
+//            payment(voucher, order);
+//        }
 
     public static int getInput(int input) { //exception handling for int input
         try {
@@ -538,5 +563,7 @@ public class Assignment {
             } while (choice != 'Y');  //here need to validate the amount must be more than grandtotal
         }
         //save the payment details into the object
+
+//                QRcode.displayQRcode();
     }
 }

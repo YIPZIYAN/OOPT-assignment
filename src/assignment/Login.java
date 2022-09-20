@@ -27,7 +27,7 @@ public class Login {
         syspause.manySec(1);
         System.out.println("          AAA         BBBBBBBBB         CCCCCCCCCC");
         syspause.manySec(1);
-        System.out.println("         AA AA        BB       BB     CC           CC");
+        System.out.println("         AA AA        BB       BB     CC          CC");
         syspause.manySec(1);
         System.out.println("        AA   AA       BB        BB   CC");
         syspause.manySec(1);
@@ -35,7 +35,7 @@ public class Login {
         syspause.manySec(1);
         System.out.println("      AAAAAAAAAAA     BB        BB   CC");
         syspause.manySec(1);
-        System.out.println("     AA         AA    BB        BB    CC           CC");
+        System.out.println("     AA         AA    BB        BB    CC          CC");
         syspause.manySec(1);
         System.out.println("    AAA         AAA   BBBBBBBBBBB       CCCCCCCCCC    ");
         syspause.manySec(2);
@@ -48,11 +48,11 @@ public class Login {
             correctPassword = 0;
             error = 1;
             System.out.println("          AAA         BBBBBBBBB         CCCCCCCCCC");
-            System.out.println("         AA AA        BB       BB     CC           CC");
+            System.out.println("         AA AA        BB       BB     CC          CC");
             System.out.println("        AA   AA       BB        BB   CC");
             System.out.println("       AA     AA      BBBBBBBBBBB    CC");
             System.out.println("      AAAAAAAAAAA     BB        BB   CC");
-            System.out.println("     AA         AA    BB        BB    CC           CC");
+            System.out.println("     AA         AA    BB        BB    CC          CC");
             System.out.println("    AAA         AAA   BBBBBBBBBBB       CCCCCCCCCC    ");
             System.out.println("");
 
