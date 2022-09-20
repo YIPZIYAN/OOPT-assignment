@@ -15,7 +15,7 @@ public class Login {
     private String password;
 
     public Login() {
-        
+
     }
 
     public Employee Login(Employee[] empDetails) {
@@ -23,22 +23,24 @@ public class Login {
         int idFound;
         int correctPassword;
         int error;
-
+        
         syspause.manySec(1);
         System.out.println("          AAA         BBBBBBBBB         CCCCCCCCCC");
-        syspause.manySec(2);
+        syspause.manySec(1);
         System.out.println("         AA AA        BB       BB     CC           CC");
-        syspause.manySec(3);
+        syspause.manySec(1);
         System.out.println("        AA   AA       BB        BB   CC");
-        syspause.manySec(4);
+        syspause.manySec(1);
         System.out.println("       AA     AA      BBBBBBBBBBB    CC");
-        syspause.manySec(5);
+        syspause.manySec(1);
         System.out.println("      AAAAAAAAAAA     BB        BB   CC");
-        syspause.manySec(6);
+        syspause.manySec(1);
         System.out.println("     AA         AA    BB        BB    CC           CC");
-        syspause.manySec(7);
+        syspause.manySec(1);
         System.out.println("    AAA         AAA   BBBBBBBBBBB       CCCCCCCCCC    ");
-        syspause.manySec(8);
+        syspause.manySec(2);
+        Assignment.clearScreen();
+        Assignment.clearScreen();
 
         do {
             Assignment.clearScreen();
@@ -60,35 +62,33 @@ public class Login {
             password = input.nextLine();
 
             for (Employee empDetail : empDetails) {
-                if(id.equalsIgnoreCase(empDetail.getEmpID())){
+                if (id.equalsIgnoreCase(empDetail.getEmpID())) {
                     idFound = 1;
-                    if(password.equals(empDetail.getPassword())){
+                    if (password.equals(empDetail.getPassword())) {
                         error = 0;
                         correctPassword = 1;
                         emp = empDetail;
+                    }
                 }
             }
-            }
-            
-            if(idFound == 1){
-                if(correctPassword == 1){
+
+            if (idFound == 1) {
+                if (correctPassword == 1) {
                     System.out.println("Login successful\n");
-                }else{
+                } else {
                     System.err.println("Wrong Password entered\n");
                     System.out.flush();
                 }
-            }else{
+            } else {
                 System.err.println("Staff ID entered does not exist\n");
                 System.out.flush();
             }
-            
+
             System.out.println("Press Enter To Continue...");
             input.nextLine();
         } while (error == 1);
-        
-        
-        
+
         return emp;
     }
-    
+
 }

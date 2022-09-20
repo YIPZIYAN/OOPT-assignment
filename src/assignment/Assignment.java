@@ -48,10 +48,11 @@ public class Assignment {
 
         ArrayList<OrderDetails> cart = new ArrayList<OrderDetails>();
         ArrayList<Order> orderRecord = new ArrayList<Order>();
-        
+       
         Login login = new Login();
         
         Employee empInCharge;
+
         empInCharge = login.Login(empDetails);
 
         boolean doneOrder = false;
@@ -357,7 +358,6 @@ public class Assignment {
             valid = true;
             System.out.print("[D]ine In/[T]ake away   > ");   //*need a looping or do it in another function
             type = getInput(type);
-            scan.nextLine();
             switch (Character.toUpperCase(type)) {
                 case 'D':
                     System.out.println("  Table");
@@ -368,9 +368,9 @@ public class Assignment {
                         valid = true;
                         System.out.print("Select A Table  > "); //validation needed
                         table = getInput(table);
-                        if (table < 0 || table > tableNo.length) {
+                        if (table <= 0 || table > tableNo.length) {
                             valid = false;
-                            System.out.println("No Such Table");
+                            System.err.println("No Such Table!");
                         }
                     } while (!valid);
                     orderType = tableNo[table - 1]; //store selected table no
