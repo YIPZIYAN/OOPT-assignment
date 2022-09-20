@@ -57,11 +57,6 @@ public class Assignment {
 
         Employee empInCharge = new Employee();
 
-//        boolean loginSucess;
-//        do {
-//            clearScreen();
-//            loginSucess = login.Login(loginInfo);
-//        } while (!loginSucess);
         boolean doneOrder = false;
         int choice = 0;
         boolean continueInput = true;
@@ -74,7 +69,6 @@ public class Assignment {
             System.out.println("3 - Go Back");
             System.out.print("Enter Selection > ");
             choice = getInput(choice);
-
             switch (choice) {
                 case 1:
                     startOrder(menu, cart);
@@ -106,8 +100,9 @@ public class Assignment {
     public static int getInput(int input) { //exception handling for int input
         try {
             input = scan.nextInt();
-            scan.nextLine(); //buffer
+            scan.nextLine();
         } catch (Exception e) {
+            scan.nextLine();
             return -1; //invalid
         }
         return input;
@@ -116,8 +111,8 @@ public class Assignment {
     public static char getInput(char input) {  //exception handling for char input
         try {
             input = scan.next(".").charAt(0);
-            scan.nextLine(); //buffer
         } catch (Exception e) { //invalid
+            scan.nextLine();
             return 0; //return null
         }
         return input;
@@ -126,7 +121,8 @@ public class Assignment {
 
     public static void systemPause() {
         System.out.println("Press Enter To Continue...");
-        scan.nextLine();
+        System.out.flush();
+        System.out.flush();
         scan.nextLine();
     }
 
@@ -188,47 +184,55 @@ public class Assignment {
             }
 
             if (!validItem) {
-                System.err.println("Invalid Input");
+                System.err.println("Invalid Input!");
+                System.err.flush();
             }
 
         } while (!validItem);
 
         do { //ask user select variation ([L/R][I/H])
-            validItem = false;
             size = getInput(size);
             size = Character.toUpperCase(size); // change to upper case
-            itemID = itemID.concat(Character.toString(size)); //get complete id
 
             if (isFood) {   //validation for size input
                 if (Character.toString(size).matches("[.LR.]")) {
                     validItem = true;
                 } else {
                     validItem = false;
-                    scan.nextLine();
                     System.err.println("Invalid Input.");
+                    System.err.flush();
                     System.out.print("Please re-enter "
                             + "\n[L]arge/[R]egular > ");
+                    System.out.flush();
                 }
             } else {
                 if (Character.toString(size).matches("[.IH.]")) {
                     validItem = true;
                 } else {
                     validItem = false;
-                    scan.nextLine();
                     System.err.println("Invalid Input.");
+                    System.err.flush();
                     System.out.print("Please re-enter "
                             + "\n[I]ced/[H]ot > ");
+                    System.out.flush();
                 }
             }
 
         } while (!validItem);
+        itemID = itemID.concat(Character.toString(size)); //get complete id
 
         boolean same = false;
         for (Menu i : menu) {   //get the selected manu object
             if (i.itemID.equals(itemID)) {
                 orderItem = i;
-                System.out.print("Enter Quantity    > ");
-                qtyOrder = scan.nextInt();
+                do {
+                    System.out.print("Enter Quantity    > ");
+                    qtyOrder = getInput(qtyOrder);
+                    if (qtyOrder <= 0) {
+                        System.err.println("Invalid Quantity!");
+                        System.err.flush();
+                    }
+                } while (qtyOrder <= 0);
                 for (int j = 0; j < cart.size(); j++) {   //check same item in cart, if same just add qty
                     if (cart.get(j).getOrderList().equals(orderItem)) {
                         same = true;
@@ -243,15 +247,28 @@ public class Assignment {
             }
         }
 
-        System.out.printf("%s - %s [%d]\nAre You Sure ?    > ", orderItem.itemID, orderItem.itemName, qtyOrder);
-        char choice = scan.next().charAt(0);
-        if (Character.toUpperCase(choice) == 'Y') {
-            if (same) {
-                cart.get(sameItemIndex).setQuantity(cart.get(sameItemIndex).getQuantity() + qtyOrder);
-            } else {
-                cart.add(orderDetails);
+        char choice = 0; //initailize with null
+        boolean valid;
+        do {
+            valid = true;
+            System.out.printf("%s - %s [%d]\nAre You Sure ?    > ", orderItem.itemID, orderItem.itemName, qtyOrder);
+            choice = getInput(choice);
+            switch (Character.toUpperCase(choice)) {
+                case 'Y':
+                    if (same) {
+                        cart.get(sameItemIndex).setQuantity(cart.get(sameItemIndex).getQuantity() + qtyOrder);
+                    } else {
+                        cart.add(orderDetails);
+                    }
+                    break;
+                case 'N':
+                    break;
+                default:
+                    valid = false;
+                    System.err.println("Invalid Input!");
+                    System.err.flush();
             }
-        }
+        } while (!valid);
     }
 
     public static boolean displayCart(int orderID, ArrayList<OrderDetails> cart) {
@@ -329,22 +346,37 @@ public class Assignment {
         }
         System.out.println("===========================================\n");
     }
-
+//here
     public static Order settingBeforePayment(Table[] tableNo, ArrayList<OrderDetails> cart, Member[] member, Employee emp, ArrayList<Order> orderRecord) {
         OrderType orderType = new OrderType();
         Order order = new Order();
-        char type = 0; //initialize null
+
+        //initialize null variable
+        char type = 0;
+        int table = 0;
         boolean valid;
 
         do {
             valid = true;
             System.out.print("[D]ine In/[T]ake away   > ");   //*need a looping or do it in another function
             type = getInput(type);
+            scan.nextLine();
             switch (Character.toUpperCase(type)) {
                 case 'D':
-                    System.out.print("Select A Table  > "); //validation needed
-                    int table = scan.nextInt();
-                    orderType = tableNo[table - 1];
+                    System.out.println("  Table");
+                    for (int i = 0; i < tableNo.length; i += 2) {
+                        System.out.printf("[%d] | [%d]\n", i + 1, i + 2);
+                    }
+                    do {
+                        valid = true;
+                        System.out.print("Select A Table  > "); //validation needed
+                        table = getInput(table);
+                        if (table < 0 || table > tableNo.length) {
+                            valid = false;
+                            System.out.println("No Such Table");
+                        }
+                    } while (!valid);
+                    orderType = tableNo[table - 1]; //store selected table no
                     break;
                 case 'T':
                     orderType = new Takeaway();

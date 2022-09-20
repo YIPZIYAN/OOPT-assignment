@@ -4,30 +4,28 @@ package assignment;
  *
  * @author Yip Zi Yan
  */
-public class Payment {
+public abstract class Payment {
 
-    private int receiptNo = 1000;
-    private double total;
-    private double discountRate;
-    private static final double tax = 1.06;
+    protected int receiptNo = 1000;
+    protected double total;
+    protected double discountRate;
+    protected final static double tax = 1.06;
 
-    public Payment() {
+    protected Payment() {
     }
 
-    public Payment(double total, double discountRate) {
+    protected Payment(double total, double discountRate) {
         this.total = total;
         this.discountRate = discountRate;
         ++receiptNo;
     }
 
-    public Payment(double total) {
+    protected Payment(double total) {
         this.total = total;
         ++receiptNo;
     }
 
-    public double calculateGrandTotal() {
-        return total * discountRate * tax;
-    }
+    public abstract double calculateGrandTotal();
 
     @Override
     public String toString() {
@@ -84,6 +82,11 @@ class Ewallet extends Payment {
     }
 
     @Override
+    public double calculateGrandTotal() {
+        return super.total * super.discountRate * super.tax;
+    }
+
+    @Override
     public String toString() {
         return super.toString() + String.format("Paid by %s-%s\nReference : %s", ewalletID, ewalletType, reference);
     }
@@ -93,6 +96,7 @@ class Ewallet extends Payment {
 class Cash extends Payment {
 
     private double cashReceive;
+    private double change;
 
     public Cash() {
     }
@@ -111,12 +115,23 @@ class Cash extends Payment {
         return cashReceive;
     }
 
+    public double getChange() {
+        return change;
+    }
+
     public void setCashReceive(double cashReceive) {
         this.cashReceive = cashReceive;
     }
 
-    public double calculateChange() {
-        return cashReceive - super.calculateGrandTotal();
+    public void setChange(double change) {
+        this.change = change;
+    }
+
+    @Override
+    public double calculateGrandTotal() {
+        double grandTotal = super.total * super.discountRate * super.tax;
+        change = cashReceive - grandTotal;
+        return grandTotal;
     }
 
     public boolean checkAmount() {
@@ -125,7 +140,7 @@ class Cash extends Payment {
 
     @Override
     public String toString() {
-        return super.toString() + String.format("Cash Received   RM.2f\nChange     RM.2f", cashReceive, calculateChange());
+        return super.toString() + String.format("Cash Received   RM.2f\nChange     RM.2f", cashReceive, change);
     }
 
 }
