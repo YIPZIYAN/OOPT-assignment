@@ -91,7 +91,7 @@ public class Employee {
     
     @Override
     public String toString(){
-        return String.format("|%-10s|%-20s|%-10s|%-15s|%-15s|%10.2f|\n", empID, name, gender, contactNo, position, salary);
+        return String.format("|  %-6s|        %-12s|  %-7s|  %-11s| %-9s|   %-9s|\n", empID, name, gender, contactNo, position, salary);
     }
 
    
