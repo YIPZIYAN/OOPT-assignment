@@ -13,7 +13,6 @@ public class Assignment {
 
     public static void main(String[] args) throws InterruptedException {
 
-
         //Employee Details - Vallerie
         Employee[] empDetails = {new Employee("ZANICE", 'F', "0123456789", "Admin1111", "Manager", 10000.00),
             new Employee("RYAN", 'M', "0178888888", "Admin2222", "Clerk", 3000.00),
@@ -48,9 +47,9 @@ public class Assignment {
 
         ArrayList<OrderDetails> cart = new ArrayList<OrderDetails>();
         ArrayList<Order> orderRecord = new ArrayList<Order>();
-       
+
         Login login = new Login();
-        
+
         Employee empInCharge;
 
         empInCharge = login.Login(empDetails);
@@ -245,11 +244,18 @@ public class Assignment {
             }
         }
 
+        System.out.print("You Had Selected >> ");
+        if (orderItem instanceof Food) {
+            System.out.printf("%s - %s (%c) x %d (RM %.2f)\n", orderItem.itemID, orderItem.itemName, ((Food) orderItem).size, qtyOrder, orderItem.price * qtyOrder);
+        } else {
+            System.out.printf("%s - %s (%s) x %d (RM %.2f)\n", orderItem.itemID, orderItem.itemName, ((Beverage) orderItem).type, qtyOrder, orderItem.price * qtyOrder);
+        }
+
         char choice = 0; //initailize with null
         boolean valid;
         do {
             valid = true;
-            System.out.printf("%s - %s [%d]\nAre You Sure ?    > ", orderItem.itemID, orderItem.itemName, qtyOrder);
+            System.out.print("Are You Sure [Y/N] ? > ");
             choice = getInput(choice);
             switch (Character.toUpperCase(choice)) {
                 case 'Y':
@@ -344,7 +350,7 @@ public class Assignment {
         }
         System.out.println("===========================================\n");
     }
-//here
+
     public static Order settingBeforePayment(Table[] tableNo, ArrayList<OrderDetails> cart, Member[] member, Employee emp, ArrayList<Order> orderRecord) {
         OrderType orderType = new OrderType();
         Order order = new Order();
