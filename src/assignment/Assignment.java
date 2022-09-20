@@ -48,15 +48,12 @@ public class Assignment {
 
         ArrayList<OrderDetails> cart = new ArrayList<OrderDetails>();
         ArrayList<Order> orderRecord = new ArrayList<Order>();
+        
         Login login = new Login();
-        Employee empInCharge = new Employee();
-<<<<<<< HEAD
-
-=======
+        
+        Employee empInCharge;
         empInCharge = login.Login(empDetails);
-        
-        
->>>>>>> 39b73d1d228567536d1386695a9b6296af3165fe
+
         boolean doneOrder = false;
         int choice = 0;
         boolean continueInput = true;
