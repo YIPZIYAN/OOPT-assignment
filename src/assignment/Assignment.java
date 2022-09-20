@@ -459,12 +459,14 @@ public class Assignment {
     }
 
     //emp prob
-    public static void payment(final Voucher[] voucher, Order order) {
+public static Payment payment(final Voucher[] voucher, Order order, ArrayList<OrderDetails> cart) {
         char choice = 'c';
         boolean invalid, haveVoucher, vValidDate, vMinSpend;
         boolean toEpay = false;
         boolean toCashpay = false;
-        Voucher applyVoucher;
+        Payment epay = new Ewallet();
+        Payment cpay = new Cash();
+        Voucher applyVoucher = new Voucher();
         do {
             invalid = false;
             vValidDate = false;
@@ -515,24 +517,28 @@ public class Assignment {
         }
 
         do {
-//            double subtotal = 0;            
-//            for (int i = 0; i < cart.size(); i++) {
-//                try {
-//                    if (cart.get(i).getOrderList().itemName.equals(cart.get(i - 1).getOrderList().itemName)) {
-//                        System.out.println(cart.get(i).displaySameOrderDetails());
-//                    } else {
-//                        System.out.println(cart.get(i));
-//                    }
-//                } catch (Exception e) {
-//                    System.out.println(cart.get(i));
-//                } finally {
-//                    subtotal += cart.get(i).calculateSubtotal(); //add total
-//                }
-//            }
+            double subtotal = 0;
+            for (int i = 0; i < cart.size(); i++) {
+                try {
+                    if (cart.get(i).getOrderList().itemName.equals(cart.get(i - 1).getOrderList().itemName)) {
+                        System.out.println(cart.get(i).displaySameOrderDetails());
+                    } else {
+                        System.out.println(cart.get(i));
+                    }
+                } catch (Exception e) {
+                    System.out.println(cart.get(i));
+                } finally {
+                    subtotal += cart.get(i).calculateSubtotal(); //add total
+                }
+            }
 
-            System.out.println("   Subtotal(RM) : ");          //display amount for payment
-            System.out.println("   Discount(RM) : ");
-            System.out.println("Grand Total(RM) : ");
+            System.out.println("   Subtotal(RM) : " + String.format("%.2f", subtotal));          //display amount for payment
+            if (haveVoucher) {
+                System.out.println("   Discount(RM) : " + String.format("%.2f", applyVoucher.calculateDiscount(subtotal)));
+                System.out.println("Grand Total(RM) : " + String.format("%.2f", epay.calculateGrandTotal()));
+            } else {
+                System.out.println("Grand Total(RM) : " + String.format("%.2f", epay.calculateGrandTotal()));
+            }
             System.out.println("Please select payment method");//select payment option
             System.out.println("[E]-wallet/[C]ash");
             choice = getInput(choice);
@@ -554,16 +560,28 @@ public class Assignment {
                 System.out.println("Confirm payment > ");
                 choice = getInput(choice);
             } while (choice != 'Y');
+            return epay;
         }
-        //payment objct non para cons
+
         if (toCashpay) {
+            boolean finishPay = false;
+
             do {
                 System.out.println("Enter Cash Received > ");
                 double cashReceived = scan.nextDouble();
-            } while (choice != 'Y');  //here need to validate the amount must be more than grandtotal
+                cpay(cashReceived, subtotal, applyVoucher.getDiscountRate());
+                finishPay = cpay.checkAmount();
+            } while (!finishPay);  //here need to validate the amount must be more than grandtotal
+
+            System.out.println("    Changes(RM) : " + String.format("%.2f", cpay.getChange()));
+            return cpay;
         }
+<<<<<<< HEAD
         //save the payment details into the object
 
 //                QRcode.displayQRcode();
+=======
+
+>>>>>>> 15d796ee8775f00018f7af6e15e71fc078ba6dd2
     }
 }
