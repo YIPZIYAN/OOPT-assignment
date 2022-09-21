@@ -39,8 +39,8 @@ public class Assignment {
             new Beverage("Milo", "D003H", 3.00, "Hot")
         };
 
-        Member[] member = {new Member("Test", "012-1231123", LocalDate.of(2003, 12, 14)),
-            new Member("Test2", "011-23222233", LocalDate.of(2003, 1, 14))};
+        Member[] member = {new Member("Test", "012-1231123"),
+            new Member("Test2", "011-23222233")};
 
         Voucher[] voucher = {new Voucher("ABC123", 40, 10, 10, LocalDate.of(2022, 12, 14)),
             new Voucher("HELLO", 40, 30, 10, LocalDate.of(2022, 9, 11)),
@@ -54,7 +54,6 @@ public class Assignment {
         
         boolean loginSuccessful = false;
         do {
-//            System.out.println();
             loginSuccessful = login.isLoginSucess();
             if (loginSuccessful) {
                 for (Employee empDetail : empDetails) {
@@ -152,6 +151,9 @@ public class Assignment {
         if (doneOrder) {
             Order order = settingBeforePayment(tableNo, cart, member, empInCharge); //get complete order
             Payment paymentDone = payment(voucher, order);
+            if (order.getMemberDetails()!=null) {
+                order.getMemberDetails().addPoint((int)Math.round(order.calculateSubtotal(cart)));
+            }
             //receipt
             orderRecord.add(order);
             cart.clear(); 
@@ -225,19 +227,20 @@ public class Assignment {
     
     public static void displayMember(final Member[] member) {
         clearScreen();
-        System.out.println("\n                    + Member List +");
-        System.out.println("=====================================================");
-        System.out.println(" ID     Name         Contact No    Birthday    Point");
+        System.out.println("\n             + Member List +");
+        System.out.println("==========================================");
+        System.out.println(" ID     Name         Contact No      Point");
         for (Member i : member) {
             System.out.println(" "+i);
         }
-        System.out.println("=====================================================");
+        System.out.println("==========================================");
     }
 
     public static void startOrder(final Menu[] menu, ArrayList<OrderDetails> cart) {
-        boolean validItem = false;
+         boolean validItem = false;
         boolean isFood = false;
         boolean isBeverage = false;
+        boolean cont = false;
 
         String itemID;
         char size = 'x';
@@ -247,123 +250,143 @@ public class Assignment {
         OrderDetails orderDetails = new OrderDetails(); //save to orderDetails and add to cart
         int sameItemIndex = 0;
 
-        clearScreen();
-        displayMenu(menu);
         do {
+            clearScreen();
+            displayMenu(menu);
+            do {
+                scan.nextLine();
+                isFood = false;
+                isBeverage = false;
+                System.out.print("Pick An Item      > ");
+                itemID = scan.nextLine();
+                itemID = itemID.toUpperCase();
 
-            System.out.print("Pick An Item      > ");
-            itemID = scan.nextLine();
-            itemID = itemID.toUpperCase();
-
-            for (Menu i : menu) {   //check item id available
-                if (i.checkItem(itemID)) {
-                    validItem = true;
-                    if (i instanceof Food) {
-                        isFood = true;
-                        System.out.print("[L]arge/[R]egular > ");
-                    } else {
-                        isBeverage = true;
-                        System.out.print("[I]ced/[H]ot      > ");
-                    }
-                    break;
-                } else {
-                    validItem = false;
-                }
-            }
-
-            if (!validItem) {
-                System.err.println("Invalid Input!");
-                System.err.flush();
-            }
-
-        } while (!validItem);
-
-        do { //ask user select variation ([L/R][I/H])
-            size = getInput(size);
-            size = Character.toUpperCase(size); // change to upper case
-
-            if (isFood) {   //validation for size input
-                if (Character.toString(size).matches("[.LR.]")) {
-                    validItem = true;
-                } else {
-                    validItem = false;
-                    System.err.println("Invalid Input.");
-                    System.err.flush();
-                    System.out.print("Please re-enter "
-                            + "\n[L]arge/[R]egular > ");
-                    System.out.flush();
-                }
-            } else {
-                if (Character.toString(size).matches("[.IH.]")) {
-                    validItem = true;
-                } else {
-                    validItem = false;
-                    System.err.println("Invalid Input.");
-                    System.err.flush();
-                    System.out.print("Please re-enter "
-                            + "\n[I]ced/[H]ot > ");
-                    System.out.flush();
-                }
-            }
-
-        } while (!validItem);
-        itemID = itemID.concat(Character.toString(size)); //get complete id
-
-        boolean same = false;
-        for (Menu i : menu) {   //get the selected manu object
-            if (i.itemID.equals(itemID)) {
-                orderItem = i;
-                do {
-                    System.out.print("Enter Quantity    > ");
-                    qtyOrder = getInput(qtyOrder);
-                    if (qtyOrder <= 0) {
-                        System.err.println("Invalid Quantity!");
-                        System.err.flush();
-                    }
-                } while (qtyOrder <= 0);
-                for (int j = 0; j < cart.size(); j++) {   //check same item in cart, if same just add qty
-                    if (cart.get(j).getOrderList().equals(orderItem)) {
-                        same = true;
-                        sameItemIndex = j;
+                for (Menu i : menu) {   //check item id available
+                    if (i.checkItem(itemID)) {
+                        validItem = true;
+                        if (i instanceof Food) {
+                            isFood = true;
+                            System.out.print("[L]arge/[R]egular > ");
+                        } else {
+                            isBeverage = true;
+                            System.out.print("[I]ced/[H]ot      > ");
+                        }
                         break;
-                    }
-                }
-                if (!same) {
-                    orderDetails = new OrderDetails(orderItem, qtyOrder);
-                }
-
-            }
-        }
-
-        System.out.print("You Had Selected >> ");
-        if (orderItem instanceof Food) {
-            System.out.printf("%s - %s (%c) x %d (RM %.2f)\n", orderItem.itemID, orderItem.itemName, ((Food) orderItem).size, qtyOrder, orderItem.price * qtyOrder);
-        } else {
-            System.out.printf("%s - %s (%s) x %d (RM %.2f)\n", orderItem.itemID, orderItem.itemName, ((Beverage) orderItem).type, qtyOrder, orderItem.price * qtyOrder);
-        }
-
-        char choice = 0; //initailize with null
-        boolean valid;
-        do {
-            valid = true;
-            System.out.print("Are You Sure [Y/N] ? > ");
-            choice = getInput(choice);
-            switch (Character.toUpperCase(choice)) {
-                case 'Y':
-                    if (same) {
-                        cart.get(sameItemIndex).setQuantity(cart.get(sameItemIndex).getQuantity() + qtyOrder);
                     } else {
-                        cart.add(orderDetails);
+                        validItem = false;
                     }
-                    break;
-                case 'N':
-                    break;
-                default:
-                    valid = false;
+                }
+
+                if (!validItem) {
                     System.err.println("Invalid Input!");
                     System.err.flush();
+                }
+
+            } while (!validItem);
+
+            do { //ask user select variation ([L/R][I/H])
+                size = getInput(size);
+                size = Character.toUpperCase(size); // change to upper case
+
+                if (isFood) {   //validation for size input
+                    if (Character.toString(size).matches("[.LR.]")) {
+                        validItem = true;
+                    } else {
+                        validItem = false;
+                        System.err.println("Invalid Input.");
+                        System.err.flush();
+                        System.out.print("Please re-enter "
+                                + "\n[L]arge/[R]egular   > ");
+                    }
+                } else {
+                    if (Character.toString(size).matches("[.IH.]")) {
+                        validItem = true;
+                    } else {
+                        validItem = false;
+                        System.err.println("Invalid Input.");
+                        System.err.flush();
+                        System.out.print("Please re-enter "
+                                + "\n[I]ced/[H]ot       > ");
+                    }
+                }
+
+            } while (!validItem);
+            itemID = itemID.concat(Character.toString(size)); //get complete id
+
+            boolean same = false;
+            for (Menu i : menu) {   //get the selected manu object
+                if (i.itemID.equals(itemID)) {
+                    orderItem = i;
+                    do {
+                        System.out.print("Enter Quantity    > ");
+                        qtyOrder = getInput(qtyOrder);
+                        if (qtyOrder <= 0) {
+                            System.err.println("Invalid Quantity!");
+                            System.err.flush();
+                        }
+                    } while (qtyOrder <= 0);
+                    for (int j = 0; j < cart.size(); j++) {   //check same item in cart, if same just add qty
+                        if (cart.get(j).getOrderList().equals(orderItem)) {
+                            same = true;
+                            sameItemIndex = j;
+                            break;
+                        }
+                    }
+                    if (!same) {
+                        orderDetails = new OrderDetails(orderItem, qtyOrder);
+                    }
+
+                }
             }
-        } while (!valid);
+
+            System.out.print("You Had Selected >> ");
+            if (orderItem instanceof Food) {
+                System.out.printf("%s - %s (%c) x %d (RM %.2f)\n", orderItem.itemID, orderItem.itemName, ((Food) orderItem).size, qtyOrder, orderItem.price * qtyOrder);
+            } else {
+                System.out.printf("%s - %s (%s) x %d (RM %.2f)\n", orderItem.itemID, orderItem.itemName, ((Beverage) orderItem).type, qtyOrder, orderItem.price * qtyOrder);
+            }
+
+            char choice = 0; //initailize with null
+            boolean valid;
+            do {
+                valid = true;
+                System.out.print("Are You Sure [Y/N] ? > ");
+                choice = getInput(choice);
+                switch (Character.toUpperCase(choice)) {
+                    case 'Y':
+                        if (same) {
+                            cart.get(sameItemIndex).setQuantity(cart.get(sameItemIndex).getQuantity() + qtyOrder);
+                        } else {
+                            cart.add(orderDetails);
+                        }
+                        break;
+                    case 'N':
+                        break;
+                    default:
+                        valid = false;
+                        System.err.println("Invalid Input!");
+                        System.err.flush();
+                }
+            } while (!valid);
+
+            do {
+                valid = true;
+                System.out.print("Anymore [Y/N] ? > ");
+                choice = getInput(choice);
+                switch (Character.toUpperCase(choice)) {
+                    case 'Y':
+                        cont = true;
+                        break;
+                    case 'N':
+                        cont = false;
+                        break;
+                    default:
+                        valid = false;
+                        System.err.println("Invalid Input!");
+                        System.err.flush();
+                }
+            } while (!valid);
+        } while (cont);
     }
 
     public static boolean displayCart(int orderID, ArrayList<OrderDetails> cart) {
@@ -394,7 +417,6 @@ public class Assignment {
             } finally {
                 subtotal += cart.get(i).calculateSubtotal(); //add total
             }
-
         }
         System.out.println("==========================================================");
         System.out.printf("Total = RM %.2f\n", subtotal);
@@ -412,7 +434,7 @@ public class Assignment {
                     break;
                 default:
                     valid = false;
-                    System.err.println("Invalid Input");
+                    System.err.println("Invalid Input");   
             }
         } while (!valid);
         return false;
@@ -628,7 +650,7 @@ public class Assignment {
             System.out.println("Packaging Fees(RM) : " + String.format("%.2f", Takeaway.charges));
         }
         if (haveVoucher) {
-            grandTotal = order.calculateGrandTotal(subtotal, applyVoucher.getDiscountRate());
+            grandTotal = order.calculateGrandTotal(subtotal, applyVoucher.calculateDiscount(subtotal));
             System.out.println("   Discount(RM) : " + String.format("%.2f", applyVoucher.calculateDiscount(subtotal)));
         } else {
             grandTotal = order.calculateGrandTotal(subtotal);

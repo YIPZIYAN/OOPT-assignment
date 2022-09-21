@@ -4,26 +4,23 @@ package assignment;
  *
  * @author Yip Zi Yan
  */
-import java.time.LocalDate;
 
 public class Member {
 
     private String memberID;
     private String name;
     private String contactNo;
-    private LocalDate birthday;
     private int point = 0;
-    private static int memberCount = 1000;
+    private static int memberCount;
 
     public Member() {
     }
 
-    public Member(String name, String contactNo, LocalDate birthday) {
+    public Member(String name, String contactNo) {
         memberCount++;
         memberID = "M" + String.format("%03d", memberCount);
         this.name = name;
         this.contactNo = contactNo;
-        this.birthday = birthday;
     }
 
     public String getMemberID() {
@@ -42,10 +39,6 @@ public class Member {
         return contactNo;
     }
 
-    public LocalDate getBirthday() {
-        return birthday;
-    }
-
     public int getPoint() {
         return point;
     }
@@ -62,10 +55,6 @@ public class Member {
         this.contactNo = contactNo;
     }
 
-    public void setBirthday(LocalDate birthday) {
-        this.birthday = birthday;
-    }
-
     public void setPoint(int point) {
         this.point = point;
     }
@@ -73,10 +62,14 @@ public class Member {
     public boolean validateMember(String memberID) {
         return this.memberID.equals(memberID);
     }
+    
+    public void addPoint(int point){
+        this.point += point;
+    }
 
     @Override
     public String toString() {
-        return String.format("%-6s %-12s %-13s %-11s %5d", memberID, name, contactNo, birthday, point);
+        return String.format("%-6s %-12s %-15s %5d", memberID, name, contactNo, point);
     }
 
 }

@@ -54,11 +54,11 @@ public class OrderDetails implements Comparable<OrderDetails> {
 
     @Override
     public String toString() {
-        return String.format("%s %6d RM %.2f", orderList.displayMenu(), quantity, orderList.price * quantity);
+        return String.format("%-40s %7d RM %.2f", orderList.displayMenu(), quantity, orderList.price * quantity);
     }
 
     public String displaySameOrderDetails() {
-        return String.format("%s %6d RM %.2f", orderList.displayMenuNoID(), quantity, orderList.price * quantity);
+        return String.format("%-40s %7d RM %.2f", orderList.displayMenuNoID(), quantity, orderList.price * quantity);
     }
 
     @Override
