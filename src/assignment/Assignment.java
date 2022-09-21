@@ -6,6 +6,7 @@ import java.awt.Robot;
 import java.awt.AWTException;
 import java.awt.event.KeyEvent;
 import java.io.Console;
+import java.time.Month;
 
 public class Assignment {
 
@@ -43,7 +44,8 @@ public class Assignment {
             new Member("Test2", "011-23222233", LocalDate.of(2003, 1, 14))};
 
         Voucher[] voucher = {new Voucher("ABC123", 40, 30, 10, LocalDate.of(2022, 12, 14)),
-            new Voucher("HELLO", 40, 30, 10, LocalDate.of(2022, 9, 11))};
+            new Voucher("HELLO", 40, 30, 10, LocalDate.of(2022, 9, 11)),
+            new Voucher("TEST", 20, 100, 20, LocalDate.of(2022, 12, 31))};
 
         ArrayList<OrderDetails> cart = new ArrayList<OrderDetails>();
         ArrayList<Order> orderRecord = new ArrayList<Order>();
@@ -76,7 +78,7 @@ public class Assignment {
                     systemPause();
                     break;
                 case 2:
-                    orderMenu(menu, cart, voucher, tableNo, member, empInCharge,orderRecord);
+                    orderMenu(menu, cart, voucher, tableNo, member, empInCharge, orderRecord);
                     break;
                 case 3:
                     clearScreen();
@@ -220,6 +222,8 @@ public class Assignment {
             clearScreen();
             displayMenu(menu);
             do {
+                isFood = false;
+                isBeverage = false;
                 System.out.print("Pick An Item      > ");
                 itemID = scan.nextLine();
                 itemID = itemID.toUpperCase();
@@ -259,7 +263,7 @@ public class Assignment {
                         System.err.println("Invalid Input.");
                         System.err.flush();
                         System.out.print("Please re-enter "
-                                + "\n[L]arge/[R]egular > ");
+                                + "\n[L]arge/[R]egular   > ");
                     }
                 } else {
                     if (Character.toString(size).matches("[.IH.]")) {
@@ -269,7 +273,7 @@ public class Assignment {
                         System.err.println("Invalid Input.");
                         System.err.flush();
                         System.out.print("Please re-enter "
-                                + "\n[I]ced/[H]ot > ");
+                                + "\n[I]ced/[H]ot       > ");
                     }
                 }
 
@@ -336,7 +340,6 @@ public class Assignment {
                 valid = true;
                 System.out.print("Anymore [Y/N] ? > ");
                 choice = getInput(choice);
-                scan.nextLine();
                 switch (Character.toUpperCase(choice)) {
                     case 'Y':
                         cont = true;
@@ -614,7 +617,7 @@ public class Assignment {
             System.out.println("Packaging Fees(RM) : " + String.format("%.2f", Takeaway.charges));
         }
         if (haveVoucher) {
-            grandTotal = order.calculateGrandTotal(subtotal, applyVoucher.getDiscountRate());
+            grandTotal = order.calculateGrandTotal(subtotal, applyVoucher.calculateDiscount(subtotal));
             System.out.println("   Discount(RM) : " + String.format("%.2f", applyVoucher.calculateDiscount(subtotal)));
         } else {
             grandTotal = order.calculateGrandTotal(subtotal);
