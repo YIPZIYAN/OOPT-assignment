@@ -1,78 +1,112 @@
 package assignment;
 
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Scanner;
+import javax.swing.*;
 
 /**
  *
  * @Vallerie
  */
-public class Login {
+public class Login implements ActionListener {
 
-    HashMap<String, String> idPassword = new HashMap<>();
+    JFrame frame = new JFrame();
+    JLabel userIDLabel = new JLabel("User ID  :");
+    JLabel userPasswordLabel = new JLabel("Password :");
+    JLabel successMessage = new JLabel();
+    JLabel messageLabel = new JLabel();
+    JLabel headerLabel = new JLabel("ABC Cafe");
+    JTextField userIDField = new JTextField();
+    JPasswordField userPasswordField = new JPasswordField();
+    JButton loginButton = new JButton("Login");
+    JButton resetButton = new JButton("Reset");
     Scanner input = new Scanner(System.in);
+    HashMap<String, String> loginInfo = new HashMap<String, String>();
+    private boolean loginSucess;
     private String id;
     private String password;
 
-    public Login() {
+    public Login(Employee[] empDetails) {
+        for (Employee empDetail : empDetails) {
+            loginInfo.put(empDetail.getEmpID(), empDetail.getPassword());
+        }
+
+        headerLabel.setBounds(170, 40, 150, 50);
+        headerLabel.setFont(new Font("Serif", Font.BOLD, 30));
+
+        userIDLabel.setBounds(90, 120, 75, 25);
+        userPasswordLabel.setBounds(90, 170, 75, 25);
+
+        messageLabel.setBounds(150, 270, 250, 35);
+        messageLabel.setFont(new Font("Serif", Font.ITALIC, 18));
+
+        successMessage.setBounds(170, 270, 250, 35);
+        successMessage.setFont(new Font("Serif", Font.ITALIC, 18));
+
+        userIDField.setBounds(165, 120, 200, 25);
+        userPasswordField.setBounds(165, 170, 200, 25);
+
+        loginButton.setBounds(130, 220, 100, 25);
+        loginButton.setFocusable(false);
+        loginButton.addActionListener(this);
+
+        resetButton.setBounds(255, 220, 100, 25);
+        resetButton.setFocusable(false);
+        resetButton.addActionListener(this);
+
+        frame.setTitle("ABC Cafe POS Sytem - Login");
+        frame.add(headerLabel);
+        frame.add(userIDLabel);
+        frame.add(userPasswordLabel);
+        frame.add(messageLabel);
+        frame.add(userIDField);
+        frame.add(userPasswordField);
+        frame.add(loginButton);
+        frame.add(resetButton);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(500, 420);
+        frame.setLayout(null);
+        frame.setVisible(true);
 
     }
 
-    public Employee Login(Employee[] empDetails) {
-        Employee emp = new Employee();
-        int idFound;
-        int correctPassword;
-        int error;
-        
+    public void actionPerformed(ActionEvent e) {
 
+        if (e.getSource() == resetButton) {
+            userIDField.setText("");
+            userPasswordField.setText("");
+        }
 
-        do {
-            Assignment.clearScreen();
-            idFound = 0;
-            correctPassword = 0;
-            error = 1;
-            System.out.println("          AAA         BBBBBBBBB         CCCCCCCCCC");
-            System.out.println("         AA AA        BB       BB     CC          CC");
-            System.out.println("        AA   AA       BB        BB   CC");
-            System.out.println("       AA     AA      BBBBBBBBBBB    CC");
-            System.out.println("      AAAAAAAAAAA     BB        BB   CC");
-            System.out.println("     AA         AA    BB        BB    CC          CC");
-            System.out.println("    AAA         AAA   BBBBBBBBBBB       CCCCCCCCCC    ");
-            System.out.println("");
+        if (e.getSource() == loginButton) {
+            id = userIDField.getText();
+            password = String.valueOf(userPasswordField.getPassword());
 
-            System.out.print("Enter your Staff ID: ");
-            id = input.nextLine();
-            System.out.print("Enter your password: ");
-            password = input.nextLine();
+            if (loginInfo.containsKey(id.toUpperCase())) {
+                if (loginInfo.get(id.toUpperCase()).equals(password)) {
+                    messageLabel.setForeground(Color.green);
+                    messageLabel.setText("Login successful");
+                    loginSucess = true;
+                    this.id = id;
 
-            for (Employee empDetail : empDetails) {
-                if (id.equalsIgnoreCase(empDetail.getEmpID())) {
-                    idFound = 1;
-                    if (password.equals(empDetail.getPassword())) {
-                        error = 0;
-                        correctPassword = 1;
-                        emp = empDetail;
-                    }
-                }
-            }
-
-            if (idFound == 1) {
-                if (correctPassword == 1) {
-                    System.out.println("Login successful\n");
                 } else {
-                    System.err.println("Wrong Password entered\n");
-                    System.out.flush();
+                    messageLabel.setForeground(Color.red);
+                    messageLabel.setText("Wrong Password entered");
                 }
             } else {
-                System.err.println("Staff ID entered does not exist\n");
-                System.out.flush();
+                messageLabel.setForeground(Color.red);
+                messageLabel.setText("Staff ID does not exist");
             }
-
-            System.out.println("Press Enter To Continue...");
-            input.nextLine();
-        } while (error == 1);
-
-        return emp;
+        }
     }
 
+    public boolean isLoginSucess() {
+        return loginSucess;
+    }
+
+    public String getId() {
+        return id;
+    }
 }

@@ -42,7 +42,6 @@ public class Assignment {
         Member[] member = {new Member("Test", "012-1231123", LocalDate.of(2003, 12, 14)),
             new Member("Test2", "011-23222233", LocalDate.of(2003, 1, 14))};
 
-<<<<<<< HEAD
         Voucher[] voucher = {new Voucher("ABC123", 40, 10, 10, LocalDate.of(2022, 12, 14)),
             new Voucher("HELLO", 40, 30, 10, LocalDate.of(2022, 9, 11)),
             new Voucher("TEST", 20, 100, 20, LocalDate.of(2022, 12, 31))};
@@ -50,18 +49,25 @@ public class Assignment {
         ArrayList<OrderDetails> cart = new ArrayList<>();
         ArrayList<Order> orderRecord = new ArrayList<>();
 
-=======
-        Voucher[] voucher = {new Voucher("ABC123", 40, 30, 10, LocalDate.of(2022, 12, 14)),
-            new Voucher("HELLO", 40, 30, 10, LocalDate.of(2022, 9, 11))};
-
-        ArrayList<OrderDetails> cart = new ArrayList<OrderDetails>();
-        ArrayList<Order> orderRecord = new ArrayList<Order>();
+        Employee empInCharge = new Employee();
+        Login login = new Login(empDetails) ;
         
->>>>>>> 897909d0c5e295612f260378f7a4b936beed3400
-        Login login = new Login();
+        boolean loginSuccessful = false;
+        do {
+//            System.out.println();
+            loginSuccessful = login.isLoginSucess();
+            if (loginSuccessful) {
+                for (Employee empDetail : empDetails) {
+                    if (empDetail.getEmpID().equals(login.getId())) {
+                        empInCharge = empDetail;
+                        
+                    }
 
-        Employee empInCharge;
-        empInCharge = login.Login(empDetails);  //login and get emp in charge details
+                }
+                login.frame.setVisible(!loginSuccessful);
+            }
+
+        } while (!loginSuccessful);
 
         int choice = 0;
         boolean doneOrder = false;
@@ -147,6 +153,7 @@ public class Assignment {
             Order order = settingBeforePayment(tableNo, cart, member, empInCharge); //get complete order
             Payment paymentDone = payment(voucher, order);
             orderRecord.add(order);
+            cart.clear(); 
         }
     }
 
