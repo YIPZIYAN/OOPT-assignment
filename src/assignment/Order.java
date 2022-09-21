@@ -13,6 +13,7 @@ public class Order implements Charges {
     private int orderID;
     private LocalDate orderDate;
     private OrderType orderType;
+    private double grandTotal;
     private ArrayList<OrderDetails> orderDetails;
     private Member memberDetails;
     private Employee empDetails;
@@ -68,6 +69,10 @@ public class Order implements Charges {
         return totalOrder;
     }
 
+    public double getGrandTotal() {
+        return grandTotal;
+    }
+
     public void setOrderID(int orderID) {
         this.orderID = orderID;
     }
@@ -108,22 +113,27 @@ public class Order implements Charges {
     //total with tax and discount
     public double calculateGrandTotal(double subtotal, double discount) {
         if (orderType instanceof Takeaway) {
-            return subtotal * TAX - discount + Takeaway.charges;
+            this.grandTotal = subtotal * TAX * discount + Takeaway.charges;
+            return subtotal * TAX * discount + Takeaway.charges;
         }
+        this.grandTotal = subtotal * TAX * discount;
         return subtotal * TAX * discount;
     }
 
     //total with tax only
     public double calculateGrandTotal(double subtotal) {
         if (orderType instanceof Takeaway) {
+            this.grandTotal = subtotal * TAX + Takeaway.charges;
             return subtotal * TAX + Takeaway.charges;
         }
+        this.grandTotal = subtotal * TAX;
         return subtotal * TAX;
     }
 
     @Override
-    public String toString() {
-        return String.format("Order ID : %04d\nDate : %s\n%s\n%s\n", orderID, orderDate, empDetails, orderType, orderDetails);
+    public String toString() {  // to print out sales summary
+        return String.format(
+                "%04d  %10s %8s RM%10.2f", orderID, empDetails.getName(), orderType.getOrdertype(), grandTotal);
     }
 
 }
