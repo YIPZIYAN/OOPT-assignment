@@ -96,12 +96,18 @@ public class Order {
         Order.totalOrder = totalOrder;
     }
 
+    //subtotal
     public static double calculateSubtotal(ArrayList<OrderDetails> orderDetails) {
         double subtotal = 0;
         for (OrderDetails i : orderDetails) {
             subtotal += i.getQuantity() * i.getOrderList().price;
         }
         return subtotal;
+    }
+
+    //total with tax and discount
+    public double calculateGrandTotal(double subtotal, double tax, double discount) {
+        return subtotal * tax * discount;
     }
 
     @Override

@@ -7,29 +7,29 @@ package assignment;
 public abstract class Payment {
 
     protected int receiptNo = 1000;
-    protected double total;
+    protected double grandTotal;
     protected double discountRate;
-    protected final static double tax = 1.06;
+    protected final static double TAX = 1.06;
 
     protected Payment() {
     }
 
-    protected Payment(double total, double discountRate) {
-        this.total = total;
+    protected Payment(double grandTotal, double discountRate) {
+        this.grandTotal = grandTotal;
         this.discountRate = discountRate;
         ++receiptNo;
     }
 
-    protected Payment(double total) {
-        this.total = total;
+    protected Payment(double grandTotal) {
+        this.grandTotal = grandTotal;
         ++receiptNo;
     }
 
-    public abstract double calculateGrandTotal();
+    public abstract void transaction(double receive);
 
     @Override
     public String toString() {
-        return String.format("Discount    RM%.2f\nTax    RM%.2f\nGrand Total   RM%.2f\n\n", total * discountRate, total * tax, calculateGrandTotal());
+        return String.format("Discount    RM%.2f\nTax    RM%.2f\nGrand Total   RM%.2f\n\n", grandTotal * discountRate, grandTotal * TAX, grandTotal);
     }
 
 }
@@ -43,15 +43,15 @@ class Ewallet extends Payment {
     public Ewallet() {
     }
 
-    public Ewallet(String ewalletType, String ewalletID, String reference, double total, double discountRate) {
-        super(total, discountRate);
+    public Ewallet(String ewalletType, String ewalletID, String reference, double grandTotal, double discountRate) {
+        super(grandTotal, discountRate);
         this.ewalletType = ewalletType;
         this.ewalletID = ewalletID;
         this.reference = reference;
     }
 
-    public Ewallet(String ewalletType, String ewalletID, String reference, double total) {
-        super(total);
+    public Ewallet(String ewalletType, String ewalletID, String reference, double grandTotal) {
+        super(grandTotal);
         this.ewalletType = ewalletType;
         this.ewalletID = ewalletID;
         this.reference = reference;
@@ -82,8 +82,8 @@ class Ewallet extends Payment {
     }
 
     @Override
-    public double calculateGrandTotal() {
-        return super.total * super.discountRate * super.tax;
+    public void transaction(double receive) {
+        Bank.gain(receive);  //add to bank
     }
 
     @Override
@@ -128,19 +128,73 @@ class Cash extends Payment {
     }
 
     @Override
-    public double calculateGrandTotal() {
-        double grandTotal = super.total * super.discountRate * super.tax;
-        change = cashReceive - grandTotal;
-        return grandTotal;
+    public void transaction(double receive) {
+        Bank.gain(receive);
+        Bank.deduct(change);
     }
 
-    public boolean checkAmount() {
-        return cashReceive >= calculateGrandTotal();
+    public boolean checkAmount(double grandTotal) {
+        return cashReceive >= grandTotal;
     }
 
     @Override
     public String toString() {
         return super.toString() + String.format("Cash Received   RM.2f\nChange     RM.2f", cashReceive, change);
+    }
+
+}
+
+class Card extends Payment {
+
+    private String accNo;
+    private double balance;
+
+    public Card(String accNo, double balance) { //for card declaration
+        this.accNo = accNo;
+        this.balance = balance;
+    }
+
+    public Card(String accNo, double balance, double grandTotal, double discountRate) {
+        super(grandTotal, discountRate);
+        this.accNo = accNo;
+        this.balance = balance;
+    }
+
+    public Card(String accNo, double balance, double grandTotal) {
+        super(grandTotal);
+        this.accNo = accNo;
+        this.balance = balance;
+    }
+
+    public void setAccNo(String accNo) {
+        this.accNo = accNo;
+    }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
+
+    public String getAccNo() {
+        return accNo;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    @Override
+    public void transaction(double receive) {
+        Bank.gain(receive);
+        balance -= receive;
+    }
+
+    public boolean checkAmount(double grandTotal) {
+        return balance >= grandTotal;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + String.format("Account No:   %s\n", accNo);
     }
 
 }

@@ -63,7 +63,7 @@ public class Assignment {
             clearScreen();
             valid = true;
             System.out.println("\n\tABC Cafe POS System\n");
-            System.out.println("Employee In Charge : "+empInCharge.getName()+"\nDate : " + new Date());
+            System.out.println("Employee In Charge : " + empInCharge.getName() + "\nDate : " + new Date());
             System.out.println("\n           Main Menu");
             System.out.println("------------------------------");
             System.out.println("1 - Order");
@@ -76,6 +76,7 @@ public class Assignment {
             choice = getInput(choice);
             switch (choice) {
                 case 1:
+                    orderMenu(menu,cart,voucher,tableNo,member,empInCharge);
                     break;
                 case 2:
                     break;
@@ -95,29 +96,40 @@ public class Assignment {
         } while (!valid);
 
     }
-    //        boolean doneOrder = false;
-    //            switch (choice) {
-//                case 1:
-//                    startOrder(menu, cart);
-//                    break;
-//                case 2:
-//                    doneOrder = displayCart(Order.getTotalOrder(), cart);
-//                    break;
-//                case 3:
-//                    continueInput = false;
-//                    break;
-//                default:
-//                    System.err.println("Invalid Selection!!");
-//                    System.err.flush();
-//                    systemPause();
-//            }
-//            if (doneOrder) {    //if an order had done, go out of loop
-//                continueInput = false;
-//            }
-//            if (doneOrder) {
-//            Order order = settingBeforePayment(tableNo, cart, member, empInCharge, orderRecord); //get complete order
-//            payment(voucher, order);
-//        }
+
+    public static void orderMenu(Menu[] menu, ArrayList<OrderDetails> cart, Voucher[] voucher, Table[] tableNo, Member[] member, Employee empInCharge) {
+        boolean doneOrder = false;
+        boolean continueInput;
+        char choice = 0;
+        do {
+            clearScreen();
+            continueInput = true;
+            choice = getInput(choice);
+            switch (choice) {
+                case 1:
+                    startOrder(menu, cart);
+                    break;
+                case 2:
+                    doneOrder = displayCart(Order.getTotalOrder(), cart);
+                    break;
+                case 3:
+                    continueInput = false;
+                    break;
+                default:
+                    System.err.println("Invalid Selection!!");
+                    System.err.flush();
+                    systemPause();
+            }
+        } while (!continueInput);
+        if (doneOrder) {    //if an order had done, go out of loop
+            continueInput = false;
+        }
+        if (doneOrder) {
+
+            Order order = settingBeforePayment(tableNo, cart, member, empInCharge); //get complete order
+            payment(voucher, order);
+        }
+    }
 
     public static int getInput(int input) { //exception handling for int input
         try {
@@ -143,7 +155,6 @@ public class Assignment {
 
     public static void systemPause() {
         System.out.println("Press Enter To Continue...");
-        System.out.flush();
         System.out.flush();
         scan.nextLine();
     }
@@ -376,7 +387,7 @@ public class Assignment {
         System.out.println("===========================================\n");
     }
 
-    public static Order settingBeforePayment(Table[] tableNo, ArrayList<OrderDetails> cart, Member[] member, Employee emp, ArrayList<Order> orderRecord) {
+    public static Order settingBeforePayment(Table[] tableNo, ArrayList<OrderDetails> cart, Member[] member, Employee emp) {
         OrderType orderType = new OrderType();
         Order order = new Order();
 
@@ -459,12 +470,12 @@ public class Assignment {
     }
 
     //emp prob
-public static Payment payment(final Voucher[] voucher, Order order, ArrayList<OrderDetails> cart) {
+    public static Payment payment(final Voucher[] voucher, Order order, ArrayList<OrderDetails> cart) {
         char choice = 'c';
         boolean invalid, haveVoucher, vValidDate, vMinSpend;
         boolean toEpay = false;
         boolean toCashpay = false;
-        double passSubtotal=0;
+        double passSubtotal = 0;
         char epayMethod = 'x';
         Payment pay;
 
@@ -519,22 +530,8 @@ public static Payment payment(final Voucher[] voucher, Order order, ArrayList<Or
         }
 
         do {
-            double subtotal = 0;
-            for (int i = 0; i < cart.size(); i++) {
-                try {
-                    if (cart.get(i).getOrderList().itemName.equals(cart.get(i - 1).getOrderList().itemName)) {
-                        System.out.println(cart.get(i).displaySameOrderDetails());
-                    } else {
-                        System.out.println(cart.get(i));
-                    }
-                } catch (Exception e) {
-                    System.out.println(cart.get(i));
-                } finally {
-                    subtotal += cart.get(i).calculateSubtotal(); //add total
-                }
-            }
 
-            System.out.println("   Subtotal(RM) : " + String.format("%.2f", subtotal));          //display amount for payment
+            System.out.println("   Subtotal(RM) : " + String.format("%.2f", Order.calculateSubtotal(cart)));          //display amount for payment
             if (haveVoucher) {
                 System.out.println("   Discount(RM) : " + String.format("%.2f", applyVoucher.calculateDiscount(subtotal)));
                 System.out.println("Grand Total(RM) : " + String.format("%.2f", pay.calculateGrandTotal()));
@@ -560,7 +557,7 @@ public static Payment payment(final Voucher[] voucher, Order order, ArrayList<Or
 
         } while (choice != 'E' || choice != 'C');
 
-        if (toEpay) 
+        if (toEpay) {
             do {
                 System.out.println("Choose platform");
                 System.out.println("1. GrabPay");
@@ -569,9 +566,9 @@ public static Payment payment(final Voucher[] voucher, Order order, ArrayList<Or
                 switch (epayMethod) {
                     case 1:
                         if (haveVoucher) {
-                            pay= new Ewallet("GRABPAY", "A12345", "REFERENCE", passSubtotal, applyVoucher.getDiscountRate());
+                            pay = new Ewallet("GRABPAY", "A12345", "REFERENCE", passSubtotal, applyVoucher.getDiscountRate());
                         } else {
-                            pay= new Ewallet("GRABPAY", "A12345", "REFERENCE", passSubtotal);
+                            pay = new Ewallet("GRABPAY", "A12345", "REFERENCE", passSubtotal);
                         }
                         break;
                     case 2:
@@ -589,6 +586,7 @@ public static Payment payment(final Voucher[] voucher, Order order, ArrayList<Or
                 System.out.println("Confirm payment > ");
                 choice = getInput(choice);
             } while (choice != 'Y');
+        }
 
         if (toCashpay) {
             boolean finishPay = false;
@@ -596,19 +594,19 @@ public static Payment payment(final Voucher[] voucher, Order order, ArrayList<Or
             do {
                 System.out.println("Enter Cash Received > ");
                 double cashReceived = scan.nextDouble();
-                finishPay = ((Cash)pay).checkAmount();
-                if (haveVoucher)
+                finishPay = ((Cash) pay).checkAmount();
+                if (haveVoucher) {
                     pay = new Cash(cashReceived, passSubtotal, applyVoucher.getDiscountRate());
-                else 
-                    pay= new Cash(cashReceived, passSubtotal);
+                } else {
+                    pay = new Cash(cashReceived, passSubtotal);
+                }
             } while (!finishPay);  //here need to validate the amount must be more than grandtotal
 
-            System.out.println("    Changes(RM) : " + String.format("%.2f", ((Cash)pay).getChange()));
+            System.out.println("    Changes(RM) : " + String.format("%.2f", ((Cash) pay).getChange()));
         }
         return pay;
         //save the payment details into the object
 
 //                QRcode.displayQRcode();
-
     }
 }
