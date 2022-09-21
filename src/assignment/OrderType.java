@@ -26,20 +26,17 @@ class Takeaway extends OrderType {
     protected String takeAwayID;
     protected int takeAwayNo;
     protected static double charges = 3.00;
-    protected String status;
 
     public Takeaway() {
         super('T');
         takeAwayNo++;
         this.takeAwayID = "TA" + takeAwayNo;
-        status = "preparing";
     }
 
     @Override
     public String displayOrderType() {
         return super.displayOrderType()
-                + String.format("\n%15s %2d", "T/A No: ", takeAwayNo)
-                + String.format("\n%15s %s", "Status: ", status);
+                + String.format("\n%15s %2d", "T/A No: ", takeAwayNo);
     }
 }
 
@@ -48,13 +45,11 @@ class Table extends OrderType {
 
     int tableNo;
     String tableId;
-    String status;
 
     public Table(int tableNo) {
         super('D');
         this.tableNo = tableNo;
         this.tableId = "TAB" + tableNo;
-        status = "available";
     }
 
     @Override

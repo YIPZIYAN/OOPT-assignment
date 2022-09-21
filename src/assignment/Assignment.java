@@ -558,7 +558,7 @@ public class Assignment {
                 valid = true;
                 System.out.print("[T]ry Again/[C]ontinue Without Voucher? > ");
                 choice = getInput(choice);
-                switch (choice) {
+                switch (Character.toUpperCase(choice)) {
                     case 'T':
                         haveVoucher = true;//loop again
                         break;
@@ -577,6 +577,7 @@ public class Assignment {
         System.out.println("Payment");
         System.out.println("--------------------------");
         System.out.println("Subtotal(RM) : " + String.format("%.2f", subtotal));          //display amount for payment
+        System.out.println(" Tax 6% (RM) : " + String.format("%.2f", Order.TAX * subtotal));
         if (order.getOrderType() instanceof Takeaway) {
             System.out.println("Packaging Fees(RM) : " + String.format("%.2f", Takeaway.charges));
         }
@@ -588,17 +589,45 @@ public class Assignment {
         }
 
         int payMethod = 0;
-
+        String ewalletName = "";    //ewallet details
+        int epayMethod = 0;
         do { //**to do:cancel order
             valid = true;
             System.out.println("Please select payment method");//select payment option
             System.out.println("1. Ewallet");
             System.out.println("2. Cash");
             System.out.println("3. Card");
+            System.out.print("Enter Selection > ");
             payMethod = getInput(payMethod);
             switch (payMethod) {
                 case 1:
                     toEpay = true;
+                    QRcode qr;
+                    qr = QRcode.displayQRcode();    //show qrcode
+                    do {
+                        valid = true;
+                        System.out.println("\nChoose Platform");
+                        System.out.println("1. GrabPay");
+                        System.out.println("2. Touch'N'Go");
+                        System.out.println("0. Change Method");
+                        System.out.print("Enter Selection > ");
+                        epayMethod = getInput(epayMethod);
+                        switch (epayMethod) {
+                            case 1:
+                                ewalletName = "GrabPay";
+                                break;
+                            case 2:
+                                ewalletName = "TNG";
+                                break;
+                            case 0:
+                                break;
+                            default:
+                                valid = false;
+                                System.err.println("Invalid Input!");
+                                System.err.flush();
+                        }
+                    } while (!valid);
+                    QRcode.closeQRcode(qr); //stop display
                     break;
                 case 2:
                     toCashpay = true;
@@ -611,56 +640,36 @@ public class Assignment {
                     System.err.flush();
             }
 
+            if (valid) {
+                do {
+                    System.out.println("Confirm payment [Y/N] > ");
+                    choice = getInput(choice);
+                    switch (Character.toUpperCase(choice)) {
+                        case 'Y':
+                            break;
+                        case 'N':
+                            valid = false;//continue looping
+                            break;
+                        default:
+                            System.err.println("Invalid Input!");
+                            System.err.flush();
+                    }
+                } while (Character.toUpperCase(choice) != 'Y' && Character.toUpperCase(choice) != 'N');
+            }
+
         } while (!valid);
 
-        String ewalletName = "";
-        int epayMethod = 0;
+        Payment pay = null; //store payment
 
-        QRcode qr;
-        qr = QRcode.displayQRcode();
         if (toEpay) {
-            do {
-                valid = true;
-                System.out.println("Choose Platform");
-                System.out.println("1. GrabPay");
-                System.out.println("2. Touch'N'Go");
-                epayMethod = getInput(epayMethod);
-                switch (epayMethod) {
-                    case 1:
-                        ewalletName = "GrabPay";
-                        break;
-                    case 2:
-                        ewalletName = "TNG";
-                        break;
-                    default:
-                        valid = false;
-                        System.err.println("Invalid Input!");
-                        System.err.flush();
-                }
-
-                if (valid) {
-                    do {
-                        System.out.println("Confirm payment [Y/N] > ");
-                        choice = getInput(choice);
-                    } while (Character.toUpperCase(choice) != 'Y' && Character.toUpperCase(choice) != 'N');
-                }
-
-                if (Character.toUpperCase(choice) == 'Y') {
-                    break;
-                } else {
-                    QRcode.closeQRcode(qr);
-                    valid = false; //not confirm, loop again
-                }
-
-            } while (!valid);
+            if (haveVoucher) {
+                pay = new Ewallet(ewalletName, "A12345", "REFERENCE", order.calculateGrandTotal(subtotal), applyVoucher.getDiscountRate());
+            } else {
+                pay = new Ewallet(ewalletName, "A12345", "REFERENCE", order.calculateGrandTotal(subtotal));
+            }
         }
 
-        Payment pay; //store payment
-        if (haveVoucher) {
-            pay = new Ewallet(ewalletName, "A12345", "REFERENCE", order.calculateGrandTotal(subtotal), applyVoucher.getDiscountRate());
-        } else {
-            pay = new Ewallet(ewalletName, "A12345", "REFERENCE", order.calculateGrandTotal(subtotal));
-        }
+    
 
 //        if (toCashpay) {
 //            boolean finishPay = false;
@@ -678,8 +687,8 @@ public class Assignment {
 //
 //            System.out.println("    Changes(RM) : " + String.format("%.2f", ((Cash) pay).getChange()));
 //        }
-        return pay;
-        //save the payment details into the object
+    return pay;
+    //save the payment details into the object
 
-    }
+}
 }
