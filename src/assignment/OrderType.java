@@ -2,13 +2,13 @@ package assignment;
 
 public class OrderType {
 
-    char ordertype;
+    protected char ordertype;
 
-    public OrderType() {
+    protected OrderType() {
     }
 
-    public OrderType(char orderType) {
-        this.ordertype= orderType;
+    protected OrderType(char orderType) {
+        this.ordertype = orderType;
     }
 
     public char getOrdertype() {
@@ -22,18 +22,17 @@ public class OrderType {
 
 //child class TAKEAWAY - FC
 class Takeaway extends OrderType {
-    String takeAwayID;
-    int takeAwayNo;
-    double charges;    
-    String status;
-    
+
+    protected String takeAwayID;
+    protected int takeAwayNo;
+    protected static double charges = 3.00;
+    protected String status;
 
     public Takeaway() {
         super('T');
         takeAwayNo++;
-        this.takeAwayID= "TA"+takeAwayNo;
-        this.charges= 3.00;
-        status= "preparing";
+        this.takeAwayID = "TA" + takeAwayNo;
+        status = "preparing";
     }
 
     @Override
@@ -46,6 +45,7 @@ class Takeaway extends OrderType {
 
 //child class TABLE - FC
 class Table extends OrderType {
+
     int tableNo;
     String tableId;
     String status;
@@ -53,8 +53,8 @@ class Table extends OrderType {
     public Table(int tableNo) {
         super('D');
         this.tableNo = tableNo;
-        this.tableId = "TAB"+tableNo;
-        status="available";
+        this.tableId = "TAB" + tableNo;
+        status = "available";
     }
 
     @Override

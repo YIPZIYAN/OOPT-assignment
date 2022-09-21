@@ -13,11 +13,6 @@ public class Assignment {
 
     public static void main(String[] args) throws InterruptedException {
 
-//        QRcode qr;
-//        qr = QRcode.displayQRcode();
-//        System.out.println("enter smtg..");
-//        scan.nextLine();
-//        QRcode.closeQRcode(qr);
         //Employee Details - Vallerie
         Employee[] empDetails = {new Employee("ZANICE", 'F', "0123456789", "Admin1111", "Manager", 10000.00),
             new Employee("RYAN", 'M', "0178888888", "Admin2222", "Clerk", 3000.00),
@@ -57,53 +52,70 @@ public class Assignment {
 
         Employee empInCharge;
         empInCharge = login.Login(empDetails);  //login and get emp in charge details
+
         int choice = 0;
-        boolean valid;
+        boolean doneOrder = false;
         do {
             clearScreen();
-            valid = true;
             System.out.println("\n\tABC Cafe POS System\n");
             System.out.println("Employee In Charge : " + empInCharge.getName() + "\nDate : " + new Date());
             System.out.println("\n           Main Menu");
             System.out.println("------------------------------");
-            System.out.println("1 - Order");
-            System.out.println("2 - Menu");
-            System.out.println("3 - Member"); //just for use of checking
-            System.out.println("4 - Voucher");
-            System.out.println("5 - Summary");
-            System.out.println("\n0 - Exit");
+            System.out.println("   1 - Display Menu");
+            System.out.println("   2 - Take Order");
+            System.out.println("   3 - Payment");
+            System.out.println("   4 - Member"); // to display member points
+            System.out.println("   5 - Sales Summary");
+            System.out.println("   0 - Exit");
+            System.out.println("------------------------------");
             System.out.print("Enter Selection > ");
             choice = getInput(choice);
             switch (choice) {
                 case 1:
-                    orderMenu(menu,cart,voucher,tableNo,member,empInCharge);
+                    displayMenu(menu);
+                    systemPause();
                     break;
                 case 2:
+                    orderMenu(menu, cart, voucher, tableNo, member, empInCharge);
                     break;
                 case 3:
+                    clearScreen();
+                    //payment(voucher, order);
+                    systemPause();
                     break;
                 case 4:
+                    displayMember(member);
                     break;
                 case 5:
+                    clearScreen();
+                    //Display Sales summary
+                    systemPause();
                     break;
                 case 0:
                     break;
                 default:
-                    valid = false;
                     System.err.println("Invalid Input!");
                     System.err.flush();
+                    systemPause();
             }
-        } while (!valid);
+        } while (choice != 0);
 
     }
 
     public static void orderMenu(Menu[] menu, ArrayList<OrderDetails> cart, Voucher[] voucher, Table[] tableNo, Member[] member, Employee empInCharge) {
         boolean doneOrder = false;
         boolean continueInput;
-        char choice = 0;
+        int choice = 0;
         do {
             clearScreen();
             continueInput = true;
+            System.out.println("\n             Order");
+            System.out.println("------------------------------");
+            System.out.println("   1 - Start Order");
+            System.out.println("   2 - View Cart");
+            System.out.println("   0 - Go Back");
+            System.out.println("------------------------------");
+            System.out.print("Enter Selection > ");
             choice = getInput(choice);
             switch (choice) {
                 case 1:
@@ -112,7 +124,7 @@ public class Assignment {
                 case 2:
                     doneOrder = displayCart(Order.getTotalOrder(), cart);
                     break;
-                case 3:
+                case 0:
                     continueInput = false;
                     break;
                 default:
@@ -120,12 +132,12 @@ public class Assignment {
                     System.err.flush();
                     systemPause();
             }
-        } while (!continueInput);
-        if (doneOrder) {    //if an order had done, go out of loop
-            continueInput = false;
-        }
-        if (doneOrder) {
+            if (doneOrder) {    //if an order had done, go out of loop
+                continueInput = false;
+            }
+        } while (continueInput);
 
+        if (doneOrder) {
             Order order = settingBeforePayment(tableNo, cart, member, empInCharge); //get complete order
             payment(voucher, order);
         }
@@ -172,6 +184,7 @@ public class Assignment {
     }
 
     public static void displayMember(final Member[] member) {
+        clearScreen();
         System.out.println("Member List\n");
         System.out.println("ID     Name         Contact No    Birthday    Point");
         for (Member i : member) {
@@ -365,6 +378,7 @@ public class Assignment {
 
     public static void displayMenu(final Menu[] menu) {
         //display menu - FC
+        clearScreen();
         String check1, check2;
         System.out.println("                   + MENU + ");
         System.out.println("===========================================\n");
@@ -427,18 +441,23 @@ public class Assignment {
         } while (!valid);
 
         boolean isMember = false;
-        System.out.print("Is A Member? [Y/N] > ");    //*need a looping or do it in another function
-        char memberChoice = scan.next().charAt(0);
-        switch (Character.toUpperCase(memberChoice)) {
-            case 'Y':
-                isMember = true;
-                break;
-            case 'N':
-                order = new Order(orderType, emp, cart);
-                break;
-            default:
-                System.err.println("Invalid Input");
-        }
+        char choice = 0;
+        do {
+            valid = true;
+            System.out.print("Is A Member? [Y/N] > ");
+            choice = getInput(choice);
+            switch (Character.toUpperCase(choice)) {
+                case 'Y':
+                    isMember = true;
+                    break;
+                case 'N':
+                    order = new Order(orderType, emp, cart);
+                    break;
+                default:
+                    valid = false;
+                    System.err.println("Invalid Input");
+            }
+        } while (!valid);
 
         while (isMember) {
             scan.nextLine();    //buffer
@@ -456,37 +475,45 @@ public class Assignment {
                 break;  //stop loop
             } else {
                 System.err.println("No Such Member ID!");
-                System.out.print("[T]ry Again/[C]ontinue Without Member> > ");
-                char choice = scan.next().charAt(0);
-                if (Character.toUpperCase(choice) == 'T') {
-                    isMember = true;
-                } else {
-                    order = new Order(orderType, emp, cart); // create object with no member
-                }
+                do {
+                    valid = true;
+                    System.out.print("[T]ry Again/[C]ontinue Without Member? > ");
+                    choice = getInput(choice);
+                    switch (Character.toUpperCase(choice)) {
+                        case 'T':
+                            isMember = true;
+                            break;
+                        case 'C':
+                            order = new Order(orderType, emp, cart); // create object with no member
+                            break;
+                        default:
+                            System.err.println("Invalid Input");
+                            valid = false;
+                    }
+                } while (!valid);
             }
         }
 
         return order;
     }
 
-    //emp prob
-    public static Payment payment(final Voucher[] voucher, Order order, ArrayList<OrderDetails> cart) {
+    public static Payment payment(final Voucher[] voucher, Order order) {
         char choice = 'c';
-        boolean invalid, haveVoucher, vValidDate, vMinSpend;
+        boolean valid, haveVoucher, vValidDate, vMinSpend;
         boolean toEpay = false;
         boolean toCashpay = false;
-        double passSubtotal = 0;
-        char epayMethod = 'x';
-        Payment pay;
+        boolean toCardpay = false;
+        double subtotal = order.calculateSubtotal(order.getOrderDetails());
 
         Voucher applyVoucher = new Voucher();
+        char voucherChoice = 0;
         do {
-            invalid = false;
+            valid = true;
             vValidDate = false;
             haveVoucher = false;
             vMinSpend = false;
             System.out.print("Any Voucher? [Y/N] > ");
-            char voucherChoice = scan.next().charAt(0);
+            voucherChoice = getInput(voucherChoice);
             switch (Character.toUpperCase(voucherChoice)) {
                 case 'Y':
                     haveVoucher = true;
@@ -494,119 +521,165 @@ public class Assignment {
                 case 'N':
                     break;
                 default:
-                    invalid = true;
+                    valid = false;
                     System.err.println("Invalid Input");
                     System.err.flush();
             }
-        } while (invalid);
+        } while (!valid);
 
         while (haveVoucher) {
             scan.nextLine();    //buffer
+
+            System.out.print("Enter Voucher Code > ");
+            String voucherCode = scan.nextLine();
+            for (Voucher i : voucher) {
+                if (i.getVoucherCode().equals(voucherCode.toUpperCase())) { //check voucher exist or nt       
+                    applyVoucher = i;                                   //get the voucher code
+                    haveVoucher = true;
+                    vValidDate = i.isValid(voucherCode);                //check voucher date valid or nt
+                    vMinSpend = i.checkMinSpend(subtotal);                      //check for minSpend
+                    break;
+                } else {
+                    haveVoucher = false;
+                }
+            }
+
+            if (!haveVoucher) {
+                System.err.println("No Such Voucher Code!");
+            } else if (!vValidDate) {
+                System.err.println("Voucher Code Expired!");
+            } else if (!vMinSpend) {
+                System.err.println("Did Not Meet Minimum Purchase");
+            } else {
+                break; //valid voucher
+            }
+
             do {
-                System.out.print("Enter Voucher Code > ");
-                String voucherCode = scan.nextLine();
-                for (Voucher i : voucher) {
-                    if (i.getVoucherCode().equals(voucherCode.toUpperCase())) { //check voucher exist or nt       
-                        applyVoucher = i;                                   //get the voucher code
-                        haveVoucher = true;
-                        vValidDate = i.isValid(voucherCode);                //check voucher date valid or nt
-                        vMinSpend = i.checkMinSpend(order.calculateSubtotal(order.getOrderDetails()));                      //check for minSpend
-                        break;
-                    } else {
-                        haveVoucher = false;
-                    }
-                }
-                if (!haveVoucher) {
-                    System.err.println("No Such Voucher Code!");
-                } else if (haveVoucher && !vValidDate) {
-                    System.err.println("Voucher Code Expired!");
-                } else if (!vMinSpend) {
-                    System.err.println("Did Not Meet Minimum Purchase");
-                }
-                System.err.flush();
+                valid = true;
                 System.out.print("[T]ry Again/[C]ontinue Without Voucher? > ");
                 choice = getInput(choice);
-            } while (choice == 'T' || choice == 't');
+                switch (choice) {
+                    case 'T':
+                        haveVoucher = true;//loop again
+                        break;
+                    case 'C':
+                        haveVoucher = false;
+                        break;
+                    default:
+                        valid = false;
+                        System.err.println("Invalid Input!");
+                        System.err.flush();
+                }
+            } while (!valid);
+
         }
 
-        do {
+        System.out.println("Payment");
+        System.out.println("--------------------------");
+        System.out.println("Subtotal(RM) : " + String.format("%.2f", subtotal));          //display amount for payment
+        if (order.getOrderType() instanceof Takeaway) {
+            System.out.println("Packaging Fees(RM) : " + String.format("%.2f", Takeaway.charges));
+        }
+        if (haveVoucher) {
+            System.out.println("   Discount(RM) : " + String.format("%.2f", applyVoucher.calculateDiscount(subtotal)));
+            System.out.println("Grand Total(RM) : " + String.format("%.2f", order.calculateGrandTotal(subtotal, applyVoucher.getDiscountRate())));
+        } else {
+            System.out.println("Grand Total(RM) : " + String.format("%.2f", order.calculateGrandTotal(subtotal)));
+        }
 
-            System.out.println("   Subtotal(RM) : " + String.format("%.2f", Order.calculateSubtotal(cart)));          //display amount for payment
-            if (haveVoucher) {
-                System.out.println("   Discount(RM) : " + String.format("%.2f", applyVoucher.calculateDiscount(subtotal)));
-                System.out.println("Grand Total(RM) : " + String.format("%.2f", pay.calculateGrandTotal()));
-            } else {
-                System.out.println("Grand Total(RM) : " + String.format("%.2f", pay.calculateGrandTotal()));
-            }
+        int payMethod = 0;
+
+        do { //**to do:cancel order
+            valid = true;
             System.out.println("Please select payment method");//select payment option
-            System.out.println("[E]-wallet/[C]ash");
-            choice = getInput(choice);
-            switch (Character.toUpperCase(choice)) {
-                case 'E':
+            System.out.println("1. Ewallet");
+            System.out.println("2. Cash");
+            System.out.println("3. Card");
+            payMethod = getInput(payMethod);
+            switch (payMethod) {
+                case 1:
                     toEpay = true;
-                    passSubtotal = subtotal;
                     break;
-                case 'C':
+                case 2:
                     toCashpay = true;
-                    passSubtotal = subtotal;
                     break;
+                case 3:
+                    toCardpay = true;
                 default:
+                    valid = false;
                     System.err.println("Invalid Input!");
                     System.err.flush();
             }
 
-        } while (choice != 'E' || choice != 'C');
+        } while (!valid);
 
+        String ewalletName = "";
+        int epayMethod = 0;
+
+        QRcode qr;
+        qr = QRcode.displayQRcode();
         if (toEpay) {
             do {
-                System.out.println("Choose platform");
+                valid = true;
+                System.out.println("Choose Platform");
                 System.out.println("1. GrabPay");
                 System.out.println("2. Touch'N'Go");
                 epayMethod = getInput(epayMethod);
                 switch (epayMethod) {
                     case 1:
-                        if (haveVoucher) {
-                            pay = new Ewallet("GRABPAY", "A12345", "REFERENCE", passSubtotal, applyVoucher.getDiscountRate());
-                        } else {
-                            pay = new Ewallet("GRABPAY", "A12345", "REFERENCE", passSubtotal);
-                        }
+                        ewalletName = "GrabPay";
                         break;
                     case 2:
-                        if (haveVoucher) {
-                            pay = new Ewallet("TOUCHNGO", "A12345", "REFERENCE", passSubtotal, applyVoucher.getDiscountRate());
-                        } else {
-                            pay = new Ewallet("TOUCHNGO", "A12345", "REFERENCE", passSubtotal);
-                        }
+                        ewalletName = "TNG";
                         break;
                     default:
+                        valid = false;
                         System.err.println("Invalid Input!");
                         System.err.flush();
                 }
 
-                System.out.println("Confirm payment > ");
-                choice = getInput(choice);
-            } while (choice != 'Y');
-        }
-
-        if (toCashpay) {
-            boolean finishPay = false;
-            pay = new Cash();
-            do {
-                System.out.println("Enter Cash Received > ");
-                double cashReceived = scan.nextDouble();
-                finishPay = ((Cash) pay).checkAmount();
-                if (haveVoucher) {
-                    pay = new Cash(cashReceived, passSubtotal, applyVoucher.getDiscountRate());
-                } else {
-                    pay = new Cash(cashReceived, passSubtotal);
+                if (valid) {
+                    do {
+                        System.out.println("Confirm payment [Y/N] > ");
+                        choice = getInput(choice);
+                    } while (Character.toUpperCase(choice) != 'Y' && Character.toUpperCase(choice) != 'N');
                 }
-            } while (!finishPay);  //here need to validate the amount must be more than grandtotal
 
-            System.out.println("    Changes(RM) : " + String.format("%.2f", ((Cash) pay).getChange()));
+                if (Character.toUpperCase(choice) == 'Y') {
+                    break;
+                } else {
+                    QRcode.closeQRcode(qr);
+                    valid = false; //not confirm, loop again
+                }
+
+            } while (!valid);
         }
+
+        Payment pay; //store payment
+        if (haveVoucher) {
+            pay = new Ewallet(ewalletName, "A12345", "REFERENCE", order.calculateGrandTotal(subtotal), applyVoucher.getDiscountRate());
+        } else {
+            pay = new Ewallet(ewalletName, "A12345", "REFERENCE", order.calculateGrandTotal(subtotal));
+        }
+
+//        if (toCashpay) {
+//            boolean finishPay = false;
+//            pay = new Cash();
+//            do {
+//                System.out.println("Enter Cash Received > ");
+//                double cashReceived = scan.nextDouble();
+//                finishPay = ((Cash) pay).checkAmount();
+//                if (haveVoucher) {
+//                    pay = new Cash(cashReceived, passSubtotal, applyVoucher.getDiscountRate());
+//                } else {
+//                    pay = new Cash(cashReceived, passSubtotal);
+//                }
+//            } while (!finishPay);  //here need to validate the amount must be more than grandtotal
+//
+//            System.out.println("    Changes(RM) : " + String.format("%.2f", ((Cash) pay).getChange()));
+//        }
         return pay;
         //save the payment details into the object
 
-//                QRcode.displayQRcode();
     }
 }

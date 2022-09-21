@@ -4,12 +4,11 @@ package assignment;
  *
  * @author Yip Zi Yan
  */
-public abstract class Payment {
+public abstract class Payment implements Charges{
 
     protected int receiptNo = 1000;
     protected double grandTotal;
     protected double discountRate;
-    protected final static double TAX = 1.06;
 
     protected Payment() {
     }

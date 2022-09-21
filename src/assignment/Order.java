@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 //import java.util.Collections;
 
-public class Order {
+public class Order implements Charges {
 
     private int orderID;
     private LocalDate orderDate;
@@ -97,7 +97,7 @@ public class Order {
     }
 
     //subtotal
-    public static double calculateSubtotal(ArrayList<OrderDetails> orderDetails) {
+    public double calculateSubtotal(ArrayList<OrderDetails> orderDetails) {
         double subtotal = 0;
         for (OrderDetails i : orderDetails) {
             subtotal += i.getQuantity() * i.getOrderList().price;
@@ -106,8 +106,13 @@ public class Order {
     }
 
     //total with tax and discount
-    public double calculateGrandTotal(double subtotal, double tax, double discount) {
-        return subtotal * tax * discount;
+    public double calculateGrandTotal(double subtotal, double discount) {
+        return subtotal * TAX * discount;
+    }
+
+    //total with tax only
+    public double calculateGrandTotal(double subtotal) {
+        return subtotal * TAX;
     }
 
     @Override

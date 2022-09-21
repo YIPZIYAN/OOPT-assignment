@@ -10,5 +10,6 @@ package assignment;
  * @author Yip Zi Yan
  */
 public interface Charges {
-    
+
+    double TAX = 1.06;
 }
