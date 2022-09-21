@@ -140,7 +140,7 @@ public class Assignment {
         if (doneOrder) {
             Order order = settingBeforePayment(tableNo, cart, member, empInCharge); //get complete order
             Payment paymentDone = payment(voucher, order);
-            orderRecord
+            orderRecord.add(order);
         }
     }
 
