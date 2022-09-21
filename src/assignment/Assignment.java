@@ -43,12 +43,12 @@ public class Assignment {
         Member[] member = {new Member("Test", "012-1231123", LocalDate.of(2003, 12, 14)),
             new Member("Test2", "011-23222233", LocalDate.of(2003, 1, 14))};
 
-        Voucher[] voucher = {new Voucher("ABC123", 40, 30, 10, LocalDate.of(2022, 12, 14)),
+        Voucher[] voucher = {new Voucher("ABC123", 40, 10, 10, LocalDate.of(2022, 12, 14)),
             new Voucher("HELLO", 40, 30, 10, LocalDate.of(2022, 9, 11)),
             new Voucher("TEST", 20, 100, 20, LocalDate.of(2022, 12, 31))};
 
-        ArrayList<OrderDetails> cart = new ArrayList<OrderDetails>();
-        ArrayList<Order> orderRecord = new ArrayList<Order>();
+        ArrayList<OrderDetails> cart = new ArrayList<>();
+        ArrayList<Order> orderRecord = new ArrayList<>();
 
         Login login = new Login();
 
