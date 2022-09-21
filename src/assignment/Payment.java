@@ -4,7 +4,7 @@ package assignment;
  *
  * @author Yip Zi Yan
  */
-public abstract class Payment implements Charges{
+public abstract class Payment implements Charges {
 
     protected int receiptNo = 1000;
     protected double grandTotal;
@@ -100,13 +100,14 @@ class Cash extends Payment {
     public Cash() {
     }
 
-    public Cash(double cashReceive, double total, double discountRate) {
-        super(total, discountRate);
+    public Cash(double cashReceive, double grandTotal, double discountRate) {
+        super(grandTotal, discountRate);
+        change = cashReceive - grandTotal;
         this.cashReceive = cashReceive;
     }
 
-    public Cash(double cashReceive, double total) {
-        super(total);
+    public Cash(double cashReceive, double grandTotal) {
+        super(grandTotal);
         this.cashReceive = cashReceive;
     }
 

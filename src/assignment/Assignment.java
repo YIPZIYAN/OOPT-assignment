@@ -139,7 +139,8 @@ public class Assignment {
 
         if (doneOrder) {
             Order order = settingBeforePayment(tableNo, cart, member, empInCharge); //get complete order
-            payment(voucher, order);
+            Payment paymentDone = payment(voucher, order);
+
         }
     }
 
@@ -162,7 +163,16 @@ public class Assignment {
             return 0; //return null
         }
         return input;
+    }
 
+    public static double getInput(double input) {  //exception handling for double input
+        try {
+            input = scan.nextDouble();
+        } catch (Exception e) { //invalid
+            scan.nextLine();
+            return 0; //return null
+        }
+        return input;
     }
 
     public static void systemPause() {
@@ -500,10 +510,12 @@ public class Assignment {
     public static Payment payment(final Voucher[] voucher, Order order) {
         char choice = 'c';
         boolean valid, haveVoucher, vValidDate, vMinSpend;
-        boolean toEpay = false;
-        boolean toCashpay = false;
-        boolean toCardpay = false;
+        boolean toEpay;
+        boolean toCashpay;
+        boolean toCardpay;
         double subtotal = order.calculateSubtotal(order.getOrderDetails());
+        double grandTotal = 0;
+        Cash checkCash = new Cash();
 
         Voucher applyVoucher = new Voucher();
         char voucherChoice = 0;
@@ -577,23 +589,28 @@ public class Assignment {
         System.out.println("Payment");
         System.out.println("--------------------------");
         System.out.println("Subtotal(RM) : " + String.format("%.2f", subtotal));          //display amount for payment
-        System.out.println(" Tax 6% (RM) : " + String.format("%.2f", Order.TAX * subtotal));
+        System.out.println(" Tax 6% (RM) : " + String.format("%.2f", (Order.TAX - 1) * subtotal));
         if (order.getOrderType() instanceof Takeaway) {
             System.out.println("Packaging Fees(RM) : " + String.format("%.2f", Takeaway.charges));
         }
         if (haveVoucher) {
+            grandTotal = order.calculateGrandTotal(subtotal, applyVoucher.getDiscountRate());
             System.out.println("   Discount(RM) : " + String.format("%.2f", applyVoucher.calculateDiscount(subtotal)));
-            System.out.println("Grand Total(RM) : " + String.format("%.2f", order.calculateGrandTotal(subtotal, applyVoucher.getDiscountRate())));
         } else {
-            System.out.println("Grand Total(RM) : " + String.format("%.2f", order.calculateGrandTotal(subtotal)));
+            grandTotal = order.calculateGrandTotal(subtotal);
         }
+        System.out.println("Grand Total(RM) : " + String.format("%.2f", grandTotal));
 
         int payMethod = 0;
         String ewalletName = "";    //ewallet details
         int epayMethod = 0;
+        double cashReceived = 0;
         do { //**to do:cancel order
             valid = true;
-            System.out.println("Please select payment method");//select payment option
+            toCashpay = false;
+            toEpay = false;
+            toCardpay = false;
+            System.out.println("\nPlease select payment method");//select payment option
             System.out.println("1. Ewallet");
             System.out.println("2. Cash");
             System.out.println("3. Card");
@@ -604,6 +621,7 @@ public class Assignment {
                     toEpay = true;
                     QRcode qr;
                     qr = QRcode.displayQRcode();    //show qrcode
+                    OUTER:
                     do {
                         valid = true;
                         System.out.println("\nChoose Platform");
@@ -620,7 +638,8 @@ public class Assignment {
                                 ewalletName = "TNG";
                                 break;
                             case 0:
-                                break;
+                                valid = false;
+                                break OUTER;
                             default:
                                 valid = false;
                                 System.err.println("Invalid Input!");
@@ -631,6 +650,21 @@ public class Assignment {
                     break;
                 case 2:
                     toCashpay = true;
+                    System.out.print("Enter Cash Received > RM");
+                    cashReceived = getInput(cashReceived);
+                    if (cashReceived == 0) { //invalid
+                        valid = false;
+                        System.err.println("Invalid Input!");
+                        System.err.flush();
+                    } else {
+                        checkCash.setCashReceive(cashReceived);
+                        if (!checkCash.checkAmount(grandTotal)) {
+                            valid = false;
+                            System.err.println("Insufficient Amount!");
+                            System.err.flush();
+                        }
+                        checkCash.setChange(cashReceived - grandTotal);
+                    }
                     break;
                 case 3:
                     toCardpay = true;
@@ -642,7 +676,7 @@ public class Assignment {
 
             if (valid) {
                 do {
-                    System.out.println("Confirm payment [Y/N] > ");
+                    System.out.print("Confirm payment [Y/N] > ");
                     choice = getInput(choice);
                     switch (Character.toUpperCase(choice)) {
                         case 'Y':
@@ -663,32 +697,20 @@ public class Assignment {
 
         if (toEpay) {
             if (haveVoucher) {
-                pay = new Ewallet(ewalletName, "A12345", "REFERENCE", order.calculateGrandTotal(subtotal), applyVoucher.getDiscountRate());
+                pay = new Ewallet(ewalletName, "A12345", "REFERENCE", grandTotal, applyVoucher.getDiscountRate());
             } else {
-                pay = new Ewallet(ewalletName, "A12345", "REFERENCE", order.calculateGrandTotal(subtotal));
+                pay = new Ewallet(ewalletName, "A12345", "REFERENCE", grandTotal);
+            }
+        } else {
+            System.out.println("    Changes(RM) : " + String.format("%.2f", checkCash.getChange()));
+            if (haveVoucher) {
+                pay = new Cash(cashReceived, grandTotal, applyVoucher.getDiscountRate());
+            } else {
+                pay = new Cash(cashReceived, grandTotal);
             }
         }
 
-    
-
-//        if (toCashpay) {
-//            boolean finishPay = false;
-//            pay = new Cash();
-//            do {
-//                System.out.println("Enter Cash Received > ");
-//                double cashReceived = scan.nextDouble();
-//                finishPay = ((Cash) pay).checkAmount();
-//                if (haveVoucher) {
-//                    pay = new Cash(cashReceived, passSubtotal, applyVoucher.getDiscountRate());
-//                } else {
-//                    pay = new Cash(cashReceived, passSubtotal);
-//                }
-//            } while (!finishPay);  //here need to validate the amount must be more than grandtotal
-//
-//            System.out.println("    Changes(RM) : " + String.format("%.2f", ((Cash) pay).getChange()));
-//        }
-    return pay;
-    //save the payment details into the object
-
-}
+        pay.transaction(grandTotal); //transaction with bank
+        return pay;
+    }
 }
