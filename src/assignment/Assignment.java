@@ -222,15 +222,17 @@ public class Assignment {
         double sumTotal = 0;
         int salesCount = 0;
 
-        System.out.println("\n            + Sales Summary +");
-        System.out.println("========================================");
+        System.out.println("\n                  + Sales Summary +");
+        System.out.println("=================================================");
+        System.out.println("  RECEIPT NO      STAFF    O/TYPE     TOTAL   ");
+        System.out.println("=================================================");
 
         for (Order order : orderRecord) {
             System.out.println(" " + order.toString());
             sumTotal = order.getGrandTotal();
             salesCount++;
         }
-        System.out.println("========================================");
+        System.out.println("=================================================");
         System.out.println("  Total Sales: RM " + String.format("%.2f", sumTotal) + " of " + salesCount + " sales.");
     }
 
@@ -541,7 +543,7 @@ public class Assignment {
 
         while (isMember) {
             System.out.print("Enter Member ID > ");
-            String memberID = scan.nextLine();
+            String memberID = scan.nextLine().toUpperCase();
             for (Member i : member) {
                 if (i.validateMember(memberID)) { //if same member ID
                     order = new Order(orderType, i, emp, cart); //create object with member
@@ -769,12 +771,15 @@ public class Assignment {
                 pay = new Cash(cashReceived, grandTotal);
             }
         }
-
+        System.out.println(" To print receipt... ");
+        systemPause();
         pay.transaction(grandTotal); //transaction with bank
         return pay;
     }
 
+
     public static void receipt(final Payment payment, final Order order) {
+        clearScreen();
         System.out.println("");
         System.out.println("                          ABC Cafe");
         System.out.println("                Lot 123, Jalan Genting Kelang,");
