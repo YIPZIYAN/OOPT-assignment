@@ -242,7 +242,7 @@ public class Assignment {
 
         for (Order order : orderRecord) {
             System.out.println(" " + order.toString());
-            sumTotal = order.getGrandTotal();
+            sumTotal += order.getGrandTotal();
             salesCount++;
         }
         System.out.println("=================================================");
