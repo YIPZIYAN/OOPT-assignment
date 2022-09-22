@@ -80,7 +80,8 @@ public class Assignment {
             System.out.println("        1 - Display Menu");
             System.out.println("        2 - Take Order");
             System.out.println("        3 - Member"); // to display member points
-            System.out.println("        4 - Sales Summary");
+            System.out.println("        4 - Voucher");
+            System.out.println("        5 - Sales Summary");
             System.out.println("        0 - Exit");
             System.out.println("===================================");
             System.out.print("Enter Selection > ");
@@ -99,6 +100,11 @@ public class Assignment {
                     systemPause();
                     break;
                 case 4:
+                    clearScreen();
+                    displayVoucher(voucher);
+                    systemPause();
+                    break;
+                case 5:
                     clearScreen();
                     salesSummary(orderRecord);
                     systemPause();
@@ -237,6 +243,18 @@ public class Assignment {
             System.out.println(" " + i);
         }
         System.out.println("==========================================");
+    }
+
+    public static void displayVoucher(final Voucher[] voucher) {
+        clearScreen();
+        System.out.println("\n                    + Voucher List +");
+        System.out.println("======================================================");
+        System.out.println(" Code      Rate(%)   Min Spend  Cap Value  Expire Date");
+        for (Voucher i : voucher) {
+            System.out.println(" " + i);
+        }
+
+        System.out.println("======================================================");
     }
 
     public static void startOrder(final Menu[] menu, ArrayList<OrderDetails> cart) {
@@ -558,7 +576,7 @@ public class Assignment {
         return order;
     }
 
-    public static Payment payment(final Voucher[] voucher, Order order) {
+    public static Payment payment(final Voucher[] voucher, final Order order) {
         char choice = 'c';
         boolean valid, haveVoucher, vValidDate, vMinSpend;
         boolean toEpay;
@@ -633,9 +651,9 @@ public class Assignment {
 
         }
 
-        System.out.println("............................");
-        System.out.println("..       Payment          ..");
-        System.out.println("............................");
+        System.out.println(".............................");
+        System.out.println("..         Payment         ..");
+        System.out.println(".............................");
         System.out.println("Subtotal(RM)       : " + String.format("%8.2f", subtotal));          //display amount for payment
         System.out.println("Tax 6% (RM)        : " + String.format("%8.2f", (Order.TAX - 1) * subtotal));
         if (order.getOrderType() instanceof Takeaway) {
@@ -755,8 +773,8 @@ public class Assignment {
         pay.transaction(grandTotal); //transaction with bank
         return pay;
     }
-    
-    public static void receipt(Payment payment, Order order){
+
+    public static void receipt(final Payment payment, final Order order) {
         System.out.println("");
         System.out.println("                          ABC Cafe");
         System.out.println("                Lot 123, Jalan Genting Kelang,");
@@ -781,29 +799,26 @@ public class Assignment {
                 }
             } catch (Exception e) {
                 System.out.println(order.getOrderDetails().get(i));
-            } 
+            }
         }
         System.out.println("==========================================================");
         System.out.printf("   %-20s %33.2f\n", "Subtotal (RM)", order.calculateSubtotal(order.getOrderDetails()));
-        System.out.printf("   %-20s %33.2f\n" , "Tax 6%", ((Order.TAX - 1)* order.calculateSubtotal(order.getOrderDetails())));
-        if(order.getOrderType() instanceof Takeaway){
-            System.out.printf("   %-20s %33.2f\n", "Packaging Fee (RM)", 3.00); 
+        System.out.printf("   %-20s %33.2f\n", "Tax 6%", ((Order.TAX - 1) * order.calculateSubtotal(order.getOrderDetails())));
+        if (order.getOrderType() instanceof Takeaway) {
+            System.out.printf("   %-20s %33.2f\n", "Packaging Fee (RM)", 3.00);
         }
-        
-        System.out.printf("   %-20s %33.2f\n", "Voucher " , payment.discountAmount); //change to discountAmount 
-        System.out.printf("   %-20s %33.2f\n", "Total " , payment.grandTotal);
-        if(payment instanceof Cash){
+
+        System.out.printf("   %-20s %33.2f\n", "Voucher ", payment.discountAmount); //change to discountAmount 
+        System.out.printf("   %-20s %33.2f\n", "Total ", payment.grandTotal);
+        if (payment instanceof Cash) {
             System.out.printf("\n   %-20s %33.2f\n", "Cash", ((Cash) payment).getCashReceive());
-            System.out.printf("   %-20s %33.2f\n", "Change"  , ((Cash) payment).getChange());
+            System.out.printf("   %-20s %33.2f\n", "Change", ((Cash) payment).getChange());
         }
         System.out.println("==========================================================");
         System.out.println("                 Thank You and See You Again!!");
         System.out.println("");
         System.out.println("");
         systemPause();
-        
-        
+
     }
 }
-
-

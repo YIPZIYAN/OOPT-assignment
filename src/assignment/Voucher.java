@@ -88,7 +88,7 @@ public class Voucher {
 
     @Override
     public String toString() {
-        return String.format("%s %.1f%% RM%.2f RM%.2f %s", voucherCode, discountRate, minSpend, capValue, expireDate);
+        return String.format("%-12s %-6.1f RM%7.2f  RM%7.2f  %s", voucherCode, discountRate, minSpend, capValue, expireDate);
     }
 
 }
