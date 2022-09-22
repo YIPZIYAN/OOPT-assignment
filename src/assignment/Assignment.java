@@ -23,7 +23,6 @@ public class Assignment {
             new Employee("WINSON", 'M', "0189764533", "Staff4444", "Clerk", 3000.00),
             new Employee("VANESSA", 'F', "0135437755", "Staff5555", "Clerk", 3000.00)};
 
-        ArrayList<Takeaway> list = new ArrayList<Takeaway>();
         Table[] tableNo = {new Table(1), new Table(2), new Table(3), new Table(4), new Table(5),
             new Table(6), new Table(7), new Table(8), new Table(9), new Table(10)};
 
@@ -42,12 +41,26 @@ public class Assignment {
             new Beverage("Milo", "D003H", 3.00, "Hot")
         };
 
-        Member[] member = {new Member("Test", "012-1231123"),
-            new Member("Test2", "011-23222233")};
-
-        Voucher[] voucher = {new Voucher("ABC123", 40, 10, 10, LocalDate.of(2022, 12, 14)),
-            new Voucher("HELLO", 40, 30, 10, LocalDate.of(2022, 9, 11)),
-            new Voucher("TEST", 20, 100, 20, LocalDate.of(2022, 12, 31))};
+        Member[] member = {new Member("YZY", "012-1231123"),
+            new Member("Florryn", "011-23222233"),
+            new Member("Vallerie", "012-7482947"),
+            new Member("Jay Cao", "013-7283747"),
+            new Member("Siva Navin", "012-6475837"),
+            new Member("Chai Xun", "011-27589604"),
+            new Member("August Kun", "014-2324856"),
+            new Member("Justin", "012-3750122"),
+            new Member("Ma Yun", "012-6401236"),
+            new Member("Jimmy ", "013-0126801")
+        };
+        //name,rate,min,cap,exp
+        Voucher[] voucher = {new Voucher("ABC123", 40, 10, 10, LocalDate.of(2023, 12, 14)),
+            new Voucher("HELLO", 40, 30, 10, LocalDate.of(2022, 12, 14)),
+            new Voucher("IEMIAT", 20, 20, 20, LocalDate.of(2022, 11, 11)),
+            new Voucher("INIJ", 10, 15, 20, LocalDate.of(2022, 10, 10)),
+            new Voucher("UNKUNK", 15, 25, 20, LocalDate.of(2022, 10, 1)),
+            new Voucher("CTRLM", 5, 10, 10, LocalDate.of(2022, 9, 16)),
+            new Voucher("QMZZR", 10, 10, 10, LocalDate.of(2022, 8, 31)),
+            new Voucher("DJHWSCXK", 20, 20, 10, LocalDate.of(2022, 8, 18))};
 
         ArrayList<OrderDetails> cart = new ArrayList<>();
         ArrayList<Order> orderRecord = new ArrayList<>();
@@ -412,7 +425,7 @@ public class Assignment {
         Collections.sort(cart, OrderDetails.Comparator);
         double subtotal = 0;
         int sameCount = 0;
-        System.out.println("                     + Cart +\n");
+        System.out.println("                         + Cart +\n");
         System.out.println("Order ID : " + String.format("%04d", ++orderID));
         if (cart.isEmpty()) { //if empty
             System.out.println(RED + "Cart Is Empty!!" + RESET);
@@ -776,7 +789,6 @@ public class Assignment {
         pay.transaction(grandTotal); //transaction with bank
         return pay;
     }
-
 
     public static void receipt(final Payment payment, final Order order) {
         clearScreen();
