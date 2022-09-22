@@ -87,7 +87,7 @@ public class Assignment {
         do {
             clearScreen();
             System.out.println("\n\tABC Cafe POS System\n");
-            System.out.println("Employee In Charge : " + empInCharge.getName() + "\nDate : " + new Date());
+            System.out.println("Employee In Charge : " + empInCharge.getName() + "\nDate : " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")));
             System.out.println("\n           + Main Menu +");
             System.out.println("===================================");
             System.out.println("        1 - Display Menu");
