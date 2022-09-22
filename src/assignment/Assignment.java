@@ -613,10 +613,10 @@ public class Assignment {
             System.out.print("Enter Voucher Code > ");
             String voucherCode = scan.nextLine();
             for (Voucher i : voucher) {
-                if (i.getVoucherCode().equalsIgnoreCase(voucherCode.toUpperCase())) { //check voucher exist or nt       
+                if (i.getVoucherCode().equals(voucherCode.toUpperCase())) { //check voucher exist or nt       
                     applyVoucher = i;                                   //get the voucher code
                     haveVoucher = true;
-                    vValidDate = i.isValid(voucherCode);                //check voucher date valid or nt
+                    vValidDate = i.isValid(voucherCode.toUpperCase());                //check voucher date valid or nt
                     vMinSpend = i.checkMinSpend(subtotal);                      //check for minSpend
                     break;
                 } else {
