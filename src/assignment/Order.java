@@ -39,7 +39,7 @@ public class Order implements Charges {
         this.empDetails = empDetails;
         this.orderDetails = orderDetails; //Collections.copy(this.orderDetails,orderDetails);
         totalOrder++;
-        orderID += totalOrder;
+        orderID = orderDate.format(DateTimeFormatter.ofPattern("ddMMuu")) + "ABC" + String.format("%04d", totalOrder);
     }
 
     public String getOrderID() {
@@ -136,5 +136,5 @@ public class Order implements Charges {
         return String.format(
                 "%s  %10s %8s RM%10.2f", orderID, empDetails.getName(), orderType.getOrdertype(), grandTotal);
     }
-    
+
 }

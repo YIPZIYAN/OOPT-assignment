@@ -14,7 +14,9 @@ public class Assignment {
     public static final String RED = "\u001B[31m";
     public static final String RESET = "\u001B[0m";
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
+
+        Bank bank = new Bank(1000); //set a basic money for transaction
 
         //Employee Details - Vallerie
         Employee[] empDetails = {new Employee("ZANICE", 'F', "0123456789", "Admin1111", "Manager", 10000.00),
@@ -95,6 +97,9 @@ public class Assignment {
             System.out.println("        3 - Member"); // to display member points
             System.out.println("        4 - Voucher");
             System.out.println("        5 - Sales Summary");
+            if (empInCharge.getPosition().equals("Manager")) {
+                System.out.println("        6 - Account");
+            }
             System.out.println("        0 - Exit");
             System.out.println("===================================");
             System.out.print("Enter Selection > ");
@@ -123,7 +128,13 @@ public class Assignment {
                     systemPause();
                     break;
                 case 0:
+                    System.exit(0);
                     break;
+                case 6: //only can access if emp is manager level
+                    if (empInCharge.getPosition().equals("Manager")) {
+                        displayBank(bank);
+                        break;
+                    }
                 default:
                     System.out.println(RED + "Invalid Input!!" + RESET);
                     systemPause();
@@ -178,59 +189,6 @@ public class Assignment {
         }
     }
 
-    public static int getInput(int input) { //exception handling for int input
-        try {
-            input = scan.nextInt();
-            scan.nextLine();
-        } catch (Exception e) {
-            scan.nextLine();
-            return -1; //invalid
-        }
-        return input;
-    }
-
-    public static char getInput(char input) {  //exception handling for char input
-        String buf;
-        try {
-            buf = scan.nextLine();
-            if (buf.length() > 1) {
-                throw new Exception();
-            }
-            input = buf.charAt(0);
-        } catch (Exception e) { //invalid
-            return 0; //return null
-        }
-
-        return input;
-    }
-
-    public static double getInput(double input) {  //exception handling for double input
-        try {
-            input = scan.nextDouble();
-        } catch (Exception e) { //invalid
-            scan.nextLine();
-            return 0; //return null
-        }
-        return input;
-    }
-
-    public static void systemPause() {
-        System.out.println("Press Enter To Continue...");
-        scan.nextLine();
-    }
-
-    public static void clearScreen() {
-        try {
-            Robot robot = new Robot();
-            robot.setAutoDelay(10);
-            robot.keyPress(KeyEvent.VK_CONTROL);
-            robot.keyPress(KeyEvent.VK_L);
-            robot.keyRelease(KeyEvent.VK_CONTROL);
-            robot.keyRelease(KeyEvent.VK_L);
-        } catch (AWTException ex) {
-        }
-    }
-
     public static void salesSummary(ArrayList<Order> orderRecord) {
         double sumTotal = 0;
         int salesCount = 0;
@@ -270,6 +228,12 @@ public class Assignment {
         }
 
         System.out.println("======================================================");
+    }
+
+    public static void displayBank(final Bank bank) {
+        clearScreen();
+        System.out.println(bank);
+        systemPause();
     }
 
     public static void startOrder(final Menu[] menu, ArrayList<OrderDetails> cart) {
@@ -776,6 +740,7 @@ public class Assignment {
             } else {
                 pay = new Ewallet(ewalletName, "A12345", "REFERENCE", grandTotal);
             }
+            pay.transaction(grandTotal); //transaction with bank
         } else {
             System.out.println("Changes(RM) : " + String.format("%.2f", checkCash.getChange()));
             if (haveVoucher) {
@@ -783,10 +748,10 @@ public class Assignment {
             } else {
                 pay = new Cash(cashReceived, grandTotal);
             }
+            pay.transaction(cashReceived); //transaction with bank
         }
         System.out.println("\nTo print receipt... ");
         systemPause();
-        pay.transaction(grandTotal); //transaction with bank
         return pay;
     }
 
@@ -802,7 +767,7 @@ public class Assignment {
         System.out.println("");
         System.out.println("Receipt No : " + order.getOrderID());
         System.out.println("Staff Name : " + order.getEmpDetails().getName());
-        System.out.println("Date       : " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")));
+        System.out.println("Date       : " + order.getOrderDate());
         System.out.println("");
         System.out.println("==========================================================");
         System.out.printf("%-9s%-16s%-10s%-6s%-9s%s\n", "Item ID", "Item Name", "Price", "Type", "Quantity", "Subtotal");
@@ -837,5 +802,59 @@ public class Assignment {
         System.out.println("");
         systemPause();
 
+    }
+
+    //general function
+    public static int getInput(int input) { //exception handling for int input
+        try {
+            input = scan.nextInt();
+            scan.nextLine();
+        } catch (Exception e) {
+            scan.nextLine();
+            return -1; //invalid
+        }
+        return input;
+    }
+
+    public static char getInput(char input) {  //exception handling for char input
+        String buf;
+        try {
+            buf = scan.nextLine();
+            if (buf.length() > 1) {
+                throw new Exception();
+            }
+            input = buf.charAt(0);
+        } catch (Exception e) { //invalid
+            return 0; //return null
+        }
+
+        return input;
+    }
+
+    public static double getInput(double input) {  //exception handling for double input
+        try {
+            input = scan.nextDouble();
+        } catch (Exception e) { //invalid
+            scan.nextLine();
+            return 0; //return null
+        }
+        return input;
+    }
+
+    public static void systemPause() {
+        System.out.println("Press Enter To Continue...");
+        scan.nextLine();
+    }
+
+    public static void clearScreen() {
+        try {
+            Robot robot = new Robot();
+            robot.setAutoDelay(10);
+            robot.keyPress(KeyEvent.VK_CONTROL);
+            robot.keyPress(KeyEvent.VK_L);
+            robot.keyRelease(KeyEvent.VK_CONTROL);
+            robot.keyRelease(KeyEvent.VK_L);
+        } catch (AWTException ex) {
+        }
     }
 }
