@@ -523,7 +523,7 @@ public class Assignment {
 
         while (isMember) {
             System.out.print("Enter Member ID > ");
-            String memberID = scan.nextLine();
+            String memberID = scan.nextLine().toUpperCase();
             for (Member i : member) {
                 if (i.validateMember(memberID)) { //if same member ID
                     order = new Order(orderType, i, emp, cart); //create object with member
