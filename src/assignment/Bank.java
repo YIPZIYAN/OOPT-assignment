@@ -5,6 +5,11 @@
  */
 package assignment;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 /**
@@ -54,6 +59,23 @@ public class Bank {
         return history;
     }
 
+    public void printOut() {
+        String filename = "src/TransactionHistory/"+"transaction_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd_MM_yyyy_HH_mm_ss")) + ".txt";
+        try {
+            File myObj = new File(filename);
+            if (myObj.createNewFile()) {
+                System.out.println("File created: " + myObj.getName());
+                try (FileWriter myWriter = new FileWriter(filename)) {
+                    myWriter.write(toString());
+                }
+            } else {
+                System.out.println("File already exists.");
+            }
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+        }
+    }
+
     @Override
     public String toString() {
         return "Transaction History\n"
@@ -61,7 +83,6 @@ public class Bank {
                 + "Basic       : RM " + String.format("%.2f", basic)
                 + historyToString()
                 + "Bank Amount : RM " + String.format("%.2f", amount);
-
     }
 
 }

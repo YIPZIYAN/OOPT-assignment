@@ -231,9 +231,25 @@ public class Assignment {
     }
 
     public static void displayBank(final Bank bank) {
-        clearScreen();
-        System.out.println(bank);
-        systemPause();
+        char choice = 0;
+        do {
+            clearScreen();
+            System.out.println(bank);
+            System.out.print("Make A Copy [Y/N] ? > ");
+            choice = getInput(choice);
+            switch (Character.toUpperCase(choice)) {
+                case 'Y':
+                    bank.printOut();
+                    systemPause();
+                    break;
+                case 'N':
+                    break;
+                default:
+                    System.out.println(RED + "Invalid Input!!" + RESET);
+            }
+
+        } while (Character.toUpperCase(choice) != 'Y' && Character.toUpperCase(choice) != 'N');
+
     }
 
     public static void startOrder(final Menu[] menu, ArrayList<OrderDetails> cart) {
