@@ -393,7 +393,7 @@ public class Assignment {
         double subtotal = 0;
         int sameCount = 0;
         System.out.println("Cart");
-        System.out.println("Order ID : " + ++orderID);
+        System.out.println("Order ID : " + String.format("%04d", ++orderID));
         if (cart.isEmpty()) { //if empty
             System.out.println(RED + "Cart Is Empty!!" + RESET);
             systemPause();
@@ -593,7 +593,7 @@ public class Assignment {
             System.out.print("Enter Voucher Code > ");
             String voucherCode = scan.nextLine();
             for (Voucher i : voucher) {
-                if (i.getVoucherCode().equals(voucherCode.toUpperCase())) { //check voucher exist or nt       
+                if (i.getVoucherCode().equalsIgnoreCase(voucherCode.toUpperCase())) { //check voucher exist or nt       
                     applyVoucher = i;                                   //get the voucher code
                     haveVoucher = true;
                     vValidDate = i.isValid(voucherCode);                //check voucher date valid or nt
@@ -633,9 +633,9 @@ public class Assignment {
 
         }
 
-        System.out.println(".........................");
-        System.out.println("..       Payment       ..");
-        System.out.println(".........................");
+        System.out.println("............................");
+        System.out.println("..       Payment          ..");
+        System.out.println("............................");
         System.out.println("Subtotal(RM)       : " + String.format("%8.2f", subtotal));          //display amount for payment
         System.out.println("Tax 6% (RM)        : " + String.format("%8.2f", (Order.TAX - 1) * subtotal));
         if (order.getOrderType() instanceof Takeaway) {
@@ -758,7 +758,7 @@ public class Assignment {
     
     public static void receipt(Payment payment, Order order){
         System.out.println("");
-        System.out.println("                        ABC Restaurant");
+        System.out.println("                          ABC Cafe");
         System.out.println("                Lot 123, Jalan Genting Kelang,");
         System.out.println("                 Setapak, 53300 Kuala Lumpur");
         System.out.println("                   Tel No: 603 - 41625833");
