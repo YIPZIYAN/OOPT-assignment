@@ -153,7 +153,8 @@ public class Assignment {
             System.out.println("\n           + Order +");
             System.out.println("==============================");
             System.out.println("       1 - Start Order");
-            System.out.println("       2 - View Cart");
+            System.out.println("       2 - Cart");
+            System.out.println("       3 - Payment");
             System.out.println("       0 - Go Back");
             System.out.println("==============================");
             System.out.print("Enter Selection > ");
@@ -163,7 +164,20 @@ public class Assignment {
                     startOrder(menu, cart);
                     break;
                 case 2:
-                    doneOrder = displayCart(Order.getTotalOrder(), cart);
+                    if (!cart.isEmpty()) {
+                        cartMenu(Order.getTotalOrder(), menu, cart);
+                    } else {
+                        System.out.println(RED + "Cart Is Empty!!" + RESET);
+                        systemPause();
+                    }
+                    break;
+                case 3:
+                    if (!cart.isEmpty()) {
+                        doneOrder = proceedPayment(Order.getTotalOrder(), cart);
+                    } else {
+                        System.out.println(RED + "Cart Is Empty!!" + RESET);
+                        systemPause();
+                    }
                     break;
                 case 0:
                     continueInput = false;
@@ -400,36 +414,34 @@ public class Assignment {
         } while (cont);
     }
 
-    public static boolean displayCart(int orderID, ArrayList<OrderDetails> cart) {
+    public static void displayCart(int orderID, final ArrayList<OrderDetails> cart) {
         clearScreen();
         Collections.sort(cart, OrderDetails.Comparator);
         double subtotal = 0;
         int sameCount = 0;
         System.out.println("                         + Cart +\n");
         System.out.println("Order ID : " + String.format("%04d", ++orderID));
-        if (cart.isEmpty()) { //if empty
-            System.out.println(RED + "Cart Is Empty!!" + RESET);
-            systemPause();
-            return false;
-        }
-        System.out.println("==========================================================");
-        System.out.printf("%-9s%-16s%-10s%-6s%-9s%s\n", "Item ID", "Item Name", "Price", "Type", "Quantity", "Subtotal");
+        System.out.println("==============================================================");
+        System.out.printf("%-3s %-9s%-16s%-10s%-6s%-9s%s\n", "No", "Item ID", "Item Name", "Price", "Type", "Quantity", "Subtotal");
         for (int i = 0; i < cart.size(); i++) {
             try {
                 if (cart.get(i).getOrderList().itemName.equals(cart.get(i - 1).getOrderList().itemName)) {
-                    System.out.println(cart.get(i).displaySameOrderDetails());
+                    System.out.printf("%2d. %s\n", i + 1, cart.get(i).displaySameOrderDetails());
                 } else {
-                    System.out.println(cart.get(i));
+                    System.out.printf("%2d. %s\n", i + 1, cart.get(i));
                 }
             } catch (Exception e) {
-                System.out.println(cart.get(i));
+                System.out.printf("%2d. %s\n", i + 1, cart.get(i));
             } finally {
                 subtotal += cart.get(i).calculateSubtotal(); //add total
             }
         }
-        System.out.println("==========================================================");
+        System.out.println("==============================================================");
         System.out.printf("Total = RM %.2f\n", subtotal);
+    }
 
+    public static boolean proceedPayment(int orderID, final ArrayList<OrderDetails> cart) {
+        displayCart(orderID, cart);
         char cont = 0; //initialize null
         boolean valid;
         do {
@@ -446,7 +458,177 @@ public class Assignment {
                     System.out.println(RED + "Invalid Input!!" + RESET);
             }
         } while (!valid);
+
         return false;
+    }
+
+    public static void cartMenu(int orderID, final Menu[] menu, ArrayList<OrderDetails> cart) {
+        int choice = 0;
+        do {
+            clearScreen();
+            displayCart(orderID, cart);
+            System.out.println("\n           + Action +");
+            System.out.println("==============================");
+            System.out.println("       1 - Change Type");
+            System.out.println("       2 - Delete An Item");
+            System.out.println("       3 - Clear Cart");
+            System.out.println("       0 - Go Back");
+            System.out.println("==============================");
+            System.out.print("Enter Selection > ");
+            choice = getInput(choice);
+            switch (choice) {
+                case 1:
+                    editCart(menu, cart);
+                    break;
+                case 2:
+                    deleteCart(cart);
+                    break;
+                case 3:
+                    clearCart(cart);
+                    break;
+                case 0:
+                    break;
+                default:
+                    System.out.println(RED + "Invalid Input!!" + RESET);
+                    systemPause();
+            }
+
+            if (cart.isEmpty()) {
+                break;
+            }
+
+        } while (choice != 0);
+
+    }
+
+    public static void editCart(final Menu[] menu, ArrayList<OrderDetails> cart) {
+        boolean valid;
+        int cartNo = 0;
+        int sameItemIndex = 0;
+        char choice = 0;
+        String changeType = "Hot";
+        char changeSize = 'L';
+        String changeID = "";
+
+        System.out.print("Select A Cart No. > ");
+        cartNo = getInput(cartNo);
+        if (cartNo <= 0 || cartNo > cart.size()) {
+            System.out.println(RED + "Invalid Input!!" + RESET);
+            systemPause();
+            return;
+        }
+
+        System.out.print("Change :");
+        if (cart.get(cartNo - 1).getOrderList() instanceof Food) {
+            if (((Food) cart.get(cartNo - 1).getOrderList()).size == changeSize) {
+                changeSize = 'R';
+            }
+            changeID = cart.get(cartNo - 1).getOrderList().itemID.substring(0, cart.get(cartNo - 1).getOrderList().itemID.length() - 1) + changeSize;
+            System.out.printf("%s - %s (%c) -> (%c)\n", cart.get(cartNo - 1).getOrderList().itemID, cart.get(cartNo - 1).getOrderList().itemName, ((Food) cart.get(cartNo - 1).getOrderList()).size, changeSize);
+        } else {
+            if (((Beverage) cart.get(cartNo - 1).getOrderList()).type.equals(changeType)) {
+                changeType = "Iced";
+            }
+            changeID = cart.get(cartNo - 1).getOrderList().itemID.substring(0, cart.get(cartNo - 1).getOrderList().itemID.length() - 1) + changeType.charAt(0);
+            System.out.printf("%s - %s (%s) -> (%s)\n", cart.get(cartNo - 1).getOrderList().itemID, cart.get(cartNo - 1).getOrderList().itemName, ((Beverage) cart.get(cartNo - 1).getOrderList()).type, changeType);
+        }
+
+        Menu changeMenu = new Menu();
+        for (Menu i : menu) {
+            if (i.itemID.equals(changeID)) {
+                changeMenu = i;
+            }
+        }
+        OrderDetails changeCart = new OrderDetails(changeMenu, cart.get(cartNo - 1).getQuantity());
+
+        do {
+            valid = true;
+            System.out.print("Are You Sure [Y/N] > ");
+            choice = getInput(choice);
+            switch (Character.toUpperCase(choice)) {
+                case 'Y':
+                    boolean same = false;
+
+                    for (int j = 0; j < cart.size(); j++) {   //check same item in cart, if same just add qty
+                        if (cart.get(j).getOrderList().equals(changeCart.getOrderList())) {
+                            same = true;
+                            sameItemIndex = j;
+                            break;
+                        }
+                    }
+                    if (same) {
+                        cart.get(sameItemIndex).setQuantity(cart.get(sameItemIndex).getQuantity() + cart.get(cartNo - 1).getQuantity());
+                        cart.remove(cartNo - 1);
+                    } else {
+                        cart.set(cartNo - 1, changeCart);
+                    }
+
+                    break;
+                case 'N':
+                    break;
+                default:
+                    System.out.println(RED + "Invalid Input!!" + RESET);
+                    valid = false;
+            }
+        } while (!valid);
+    }
+
+    public static void deleteCart(ArrayList<OrderDetails> cart) {
+        boolean valid;
+        int cartNo = 0;
+        char choice = 0;
+
+        System.out.print("Select A Cart No. > ");
+        cartNo = getInput(cartNo);
+        if (cartNo <= 0 || cartNo > cart.size()) {
+            System.out.println(RED + "Invalid Input!!" + RESET);
+            systemPause();
+            return;
+        }
+
+        System.out.print("Delete :");
+        if (cart.get(cartNo - 1).getOrderList() instanceof Food) {
+            System.out.printf("%s - %s (%c) x %d (RM %.2f)\n", cart.get(cartNo - 1).getOrderList().itemID, cart.get(cartNo - 1).getOrderList().itemName, ((Food) cart.get(cartNo - 1).getOrderList()).size, cart.get(cartNo - 1).getQuantity(), cart.get(cartNo - 1).getQuantity() * cart.get(cartNo - 1).getOrderList().price);
+        } else {
+            System.out.printf("%s - %s (%s) x %d (RM %.2f)\n", cart.get(cartNo - 1).getOrderList().itemID, cart.get(cartNo - 1).getOrderList().itemName, ((Beverage) cart.get(cartNo - 1).getOrderList()).type, cart.get(cartNo - 1).getQuantity(), cart.get(cartNo - 1).getQuantity() * cart.get(cartNo - 1).getOrderList().price);
+        }
+
+        do {
+            valid = true;
+            System.out.println("Are You Sure [Y/N] > ");
+            choice = getInput(choice);
+            switch (Character.toUpperCase(choice)) {
+                case 'Y':
+                    cart.remove(cartNo - 1);
+                    break;
+                case 'N':
+                    break;
+                default:
+                    System.out.println(RED + "Invalid Input!!" + RESET);
+                    valid = false;
+            }
+        } while (!valid);
+
+    }
+
+    public static void clearCart(ArrayList<OrderDetails> cart) {
+        boolean valid;
+        char choice = 0;
+        do {
+            valid = true;
+            System.out.print("Are You Sure To Clear" + RED + " ALL " + RESET + "Item [Y/N] ? > ");
+            choice = getInput(choice);
+            switch (Character.toUpperCase(choice)) {
+                case 'Y':
+                    cart.clear();
+                    break;
+                case 'N':
+                    break;
+                default:
+                    System.out.println(RED + "Invalid Input!!" + RESET);
+                    valid = false;
+            }
+        } while (!valid);
     }
 
     public static void displayMenu(final Menu[] menu) {
