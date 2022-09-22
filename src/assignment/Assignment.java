@@ -104,6 +104,7 @@ public class Assignment {
                     systemPause();
                     break;
                 case 0:
+                    System.exit(0);
                     break;
                 default:
                     System.out.println(RED + "Invalid Input!!" + RESET);
@@ -216,15 +217,17 @@ public class Assignment {
         double sumTotal = 0;
         int salesCount = 0;
 
-        System.out.println("\n            + Sales Summary +");
-        System.out.println("========================================");
+        System.out.println("\n                  + Sales Summary +");
+        System.out.println("=================================================");
+        System.out.println("  RECEIPT NO      STAFF    O/TYPE     TOTAL   ");
+        System.out.println("=================================================");
 
         for (Order order : orderRecord) {
             System.out.println(" " + order.toString());
             sumTotal = order.getGrandTotal();
             salesCount++;
         }
-        System.out.println("========================================");
+        System.out.println("=================================================");
         System.out.println("  Total Sales: RM " + String.format("%.2f", sumTotal) + " of " + salesCount + " sales.");
     }
 
