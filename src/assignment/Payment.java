@@ -8,14 +8,14 @@ public abstract class Payment implements Charges {
 
     protected int receiptNo = 1000;
     protected double grandTotal;
-    protected double discountRate;
+    protected double discountAmount;
 
     protected Payment() {
     }
 
-    protected Payment(double grandTotal, double discountRate) {
+    protected Payment(double grandTotal, double discountAmount) {
         this.grandTotal = grandTotal;
-        this.discountRate = discountRate;
+        this.discountAmount = discountAmount;
         ++receiptNo;
     }
 
@@ -28,7 +28,7 @@ public abstract class Payment implements Charges {
 
     @Override
     public String toString() {
-        return String.format("Discount    RM%.2f\nTax    RM%.2f\nGrand Total   RM%.2f\n\n", grandTotal * discountRate, grandTotal * TAX, grandTotal);
+        return String.format("Discount    RM%.2f\nTax    RM%.2f\nGrand Total   RM%.2f\n\n", discountAmount, grandTotal * TAX, grandTotal);
     }
 
 }
@@ -42,8 +42,8 @@ class Ewallet extends Payment {
     public Ewallet() {
     }
 
-    public Ewallet(String ewalletType, String ewalletID, String reference, double grandTotal, double discountRate) {
-        super(grandTotal, discountRate);
+    public Ewallet(String ewalletType, String ewalletID, String reference, double grandTotal, double discountAmount) {
+        super(grandTotal, discountAmount);
         this.ewalletType = ewalletType;
         this.ewalletID = ewalletID;
         this.reference = reference;
@@ -100,8 +100,8 @@ class Cash extends Payment {
     public Cash() {
     }
 
-    public Cash(double cashReceive, double grandTotal, double discountRate) {
-        super(grandTotal, discountRate);
+    public Cash(double cashReceive, double grandTotal, double discountAmount) {
+        super(grandTotal, discountAmount);
         change = cashReceive - grandTotal;
         this.cashReceive = cashReceive;
     }

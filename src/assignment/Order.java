@@ -113,11 +113,11 @@ public class Order implements Charges {
     //total with tax and discount
     public double calculateGrandTotal(double subtotal, double discount) {
         if (orderType instanceof Takeaway) {
-            this.grandTotal = subtotal * TAX * discount + Takeaway.charges;
-            return subtotal * TAX * discount + Takeaway.charges;
+            this.grandTotal = subtotal * TAX - discount + Takeaway.charges;
+            return subtotal * TAX - discount + Takeaway.charges;
         }
-        this.grandTotal = subtotal * TAX * discount;
-        return subtotal * TAX * discount;
+        this.grandTotal = subtotal * TAX - discount;
+        return subtotal * TAX - discount;
     }
 
     //total with tax only
