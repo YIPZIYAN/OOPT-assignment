@@ -6,7 +6,6 @@ package assignment;
  */
 public abstract class Payment implements Charges {
 
-    protected int receiptNo = 1000;
     protected double grandTotal;
     protected double discountAmount;
 
@@ -16,12 +15,10 @@ public abstract class Payment implements Charges {
     protected Payment(double grandTotal, double discountAmount) {
         this.grandTotal = grandTotal;
         this.discountAmount = discountAmount;
-        ++receiptNo;
     }
 
     protected Payment(double grandTotal) {
         this.grandTotal = grandTotal;
-        ++receiptNo;
     }
 
     public abstract void transaction(double receive);
@@ -108,6 +105,7 @@ class Cash extends Payment {
 
     public Cash(double cashReceive, double grandTotal) {
         super(grandTotal);
+        change = cashReceive - grandTotal;
         this.cashReceive = cashReceive;
     }
 

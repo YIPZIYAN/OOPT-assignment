@@ -5,19 +5,20 @@ package assignment;
  * @author Yip Zi Yan
  */
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 //import java.util.Collections;
 
 public class Order implements Charges {
 
-    private int orderID;
+    private String orderID;
     private LocalDate orderDate;
     private OrderType orderType;
     private double grandTotal;
     private ArrayList<OrderDetails> orderDetails;
     private Member memberDetails;
     private Employee empDetails;
-    private static int totalOrder = 1000;
+    private static int totalOrder;
 
     public Order() {
     }
@@ -29,7 +30,7 @@ public class Order implements Charges {
         this.empDetails = empDetails;
         this.orderDetails = orderDetails; //Collections.copy(this.orderDetails,orderDetails);
         totalOrder++;
-        orderID += totalOrder;
+        orderID = orderDate.format(DateTimeFormatter.ofPattern("ddMMuu")) + "ABC" + String.format("%04d", totalOrder);
     }
 
     public Order(OrderType orderType, Employee empDetails, ArrayList<OrderDetails> orderDetails) {  //non-member
@@ -41,7 +42,7 @@ public class Order implements Charges {
         orderID += totalOrder;
     }
 
-    public int getOrderID() {
+    public String getOrderID() {
         return orderID;
     }
 
@@ -73,7 +74,7 @@ public class Order implements Charges {
         return grandTotal;
     }
 
-    public void setOrderID(int orderID) {
+    public void setOrderID(String orderID) {
         this.orderID = orderID;
     }
 
@@ -133,7 +134,7 @@ public class Order implements Charges {
     @Override
     public String toString() {  // to print out sales summary
         return String.format(
-                "%04d  %10s %8s RM%10.2f", orderID, empDetails.getName(), orderType.getOrdertype(), grandTotal);
+                "%s  %10s %8s RM%10.2f", orderID, empDetails.getName(), orderType.getOrdertype(), grandTotal);
     }
 
 }

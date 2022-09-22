@@ -5,6 +5,8 @@ import java.util.*;
 import java.awt.Robot;
 import java.awt.AWTException;
 import java.awt.event.KeyEvent;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Assignment {
 
@@ -60,9 +62,7 @@ public class Assignment {
                 for (Employee empDetail : empDetails) {
                     if (empDetail.getEmpID().equals(login.getId())) {
                         empInCharge = empDetail;
-
                     }
-
                 }
                 login.frame.setVisible(!loginSuccessful);
             }
@@ -153,7 +153,7 @@ public class Assignment {
             if (order.getMemberDetails() != null) {
                 order.getMemberDetails().addPoint((int) Math.round(order.calculateSubtotal(cart)));
             }
-            //receipt
+            receipt(paymentDone, order);
             orderRecord.add(order);
             cart.clear();
         }
@@ -393,7 +393,7 @@ public class Assignment {
         double subtotal = 0;
         int sameCount = 0;
         System.out.println("Cart");
-        System.out.println("Order ID : " + orderID);
+        System.out.println("Order ID : " + ++orderID);
         if (cart.isEmpty()) { //if empty
             System.out.println(RED + "Cart Is Empty!!" + RESET);
             systemPause();
@@ -661,7 +661,6 @@ public class Assignment {
             System.out.println("\nPlease select payment method");//select payment option
             System.out.println("1. Ewallet");
             System.out.println("2. Cash");
-            System.out.println("3. Card");
             System.out.print("Enter Selection > ");
             payMethod = getInput(payMethod);
             switch (payMethod) {
@@ -713,8 +712,6 @@ public class Assignment {
                         checkCash.setChange(cashReceived - grandTotal);
                     }
                     break;
-                case 3:
-                    toCardpay = true;
                 default:
                     valid = false;
                     System.out.println(RED + "Invalid Input!!" + RESET);
@@ -758,4 +755,55 @@ public class Assignment {
         pay.transaction(grandTotal); //transaction with bank
         return pay;
     }
+    
+    public static void receipt(Payment payment, Order order){
+        System.out.println("");
+        System.out.println("                        ABC Restaurant");
+        System.out.println("                Lot 123, Jalan Genting Kelang,");
+        System.out.println("                 Setapak, 53300 Kuala Lumpur");
+        System.out.println("                   Tel No: 603 - 41625833");
+        System.out.println("");
+        System.out.println("                         + RECEIPT +");
+        System.out.println("");
+        System.out.println("Receipt No : " + order.getOrderID());
+        System.out.println("Staff Name : " + order.getEmpDetails().getName());
+        System.out.println("Date       : " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")));
+        System.out.println("");
+        System.out.println("==========================================================");
+        System.out.printf("%-9s%-16s%-10s%-6s%-9s%s\n", "Item ID", "Item Name", "Price", "Type", "Quantity", "Subtotal");
+        System.out.println("==========================================================");
+        for (int i = 0; i < order.getOrderDetails().size(); i++) {
+            try {
+                if (order.getOrderDetails().get(i).getOrderList().itemName.equals(order.getOrderDetails().get(i - 1).getOrderList().itemName)) {
+                    System.out.println(order.getOrderDetails().get(i).displaySameOrderDetails());
+                } else {
+                    System.out.println(order.getOrderDetails().get(i));
+                }
+            } catch (Exception e) {
+                System.out.println(order.getOrderDetails().get(i));
+            } 
+        }
+        System.out.println("==========================================================");
+        System.out.printf("   %-20s %33.2f\n", "Subtotal (RM)", order.calculateSubtotal(order.getOrderDetails()));
+        System.out.printf("   %-20s %33.2f\n" , "Tax 6%", ((Order.TAX - 1)* order.calculateSubtotal(order.getOrderDetails())));
+        if(order.getOrderType() instanceof Takeaway){
+            System.out.printf("   %-20s %33.2f\n", "Packaging Fee (RM)", 3.00); 
+        }
+        
+        System.out.printf("   %-20s %33.2f\n", "Voucher " , payment.discountAmount); //change to discountAmount 
+        System.out.printf("   %-20s %33.2f\n", "Total " , payment.grandTotal);
+        if(payment instanceof Cash){
+            System.out.printf("\n   %-20s %33.2f\n", "Cash", ((Cash) payment).getCashReceive());
+            System.out.printf("   %-20s %33.2f\n", "Change"  , ((Cash) payment).getChange());
+        }
+        System.out.println("==========================================================");
+        System.out.println("                 Thank You and See You Again!!");
+        System.out.println("");
+        System.out.println("");
+        systemPause();
+        
+        
+    }
 }
+
+
