@@ -395,10 +395,8 @@ public class Assignment {
         System.out.println("Cart");
         System.out.println("Order ID : " + orderID);
         if (cart.isEmpty()) { //if empty
-            System.err.println("Cart Is Empty!");
-            System.err.flush();
-            System.out.println("Press Enter To Go Back...");
-            scan.nextLine();
+            System.out.println(RED + "Cart Is Empty!!" + RESET);
+            systemPause();
             return false;
         }
         System.out.println("==========================================================");
@@ -524,7 +522,6 @@ public class Assignment {
         } while (!valid);
 
         while (isMember) {
-            scan.nextLine();    //buffer
             System.out.print("Enter Member ID > ");
             String memberID = scan.nextLine();
             for (Member i : member) {
@@ -593,8 +590,6 @@ public class Assignment {
         } while (!valid);
 
         while (haveVoucher) {
-            scan.nextLine();    //buffer
-
             System.out.print("Enter Voucher Code > ");
             String voucherCode = scan.nextLine();
             for (Voucher i : voucher) {
@@ -638,20 +633,21 @@ public class Assignment {
 
         }
 
-        System.out.println("Payment");
-        System.out.println("--------------------------");
-        System.out.println("Subtotal(RM) : " + String.format("%.2f", subtotal));          //display amount for payment
-        System.out.println(" Tax 6% (RM) : " + String.format("%.2f", (Order.TAX - 1) * subtotal));
+        System.out.println(".........................");
+        System.out.println("..       Payment       ..");
+        System.out.println(".........................");
+        System.out.println("Subtotal(RM)       : " + String.format("%8.2f", subtotal));          //display amount for payment
+        System.out.println("Tax 6% (RM)        : " + String.format("%8.2f", (Order.TAX - 1) * subtotal));
         if (order.getOrderType() instanceof Takeaway) {
-            System.out.println("Packaging Fees(RM) : " + String.format("%.2f", Takeaway.charges));
+            System.out.println("Packaging Fees(RM) : " + String.format("%8.2f", Takeaway.charges));
         }
         if (haveVoucher) {
             grandTotal = order.calculateGrandTotal(subtotal, applyVoucher.calculateDiscount(subtotal));
-            System.out.println("   Discount(RM) : " + String.format("%.2f", applyVoucher.calculateDiscount(subtotal)));
+            System.out.println("Discount(RM)       : " + String.format("%8.2f", applyVoucher.calculateDiscount(subtotal)));
         } else {
             grandTotal = order.calculateGrandTotal(subtotal);
         }
-        System.out.println("Grand Total(RM) : " + String.format("%.2f", grandTotal));
+        System.out.println("Grand Total(RM)    : " + String.format("%8.2f", grandTotal));
 
         int payMethod = 0;
         String ewalletName = "";    //ewallet details
@@ -703,6 +699,7 @@ public class Assignment {
                     toCashpay = true;
                     System.out.print("Enter Cash Received > RM");
                     cashReceived = getInput(cashReceived);
+                    scan.nextLine();
                     if (cashReceived == 0) { //invalid
                         valid = false;
                         System.out.println(RED + "Invalid Input!!" + RESET);
