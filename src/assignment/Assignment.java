@@ -751,12 +751,14 @@ public class Assignment {
                 pay = new Cash(cashReceived, grandTotal);
             }
         }
-
+        System.out.println(" To print receipt... ");
+        systemPause();
         pay.transaction(grandTotal); //transaction with bank
         return pay;
     }
     
     public static void receipt(Payment payment, Order order){
+        clearScreen();
         System.out.println("");
         System.out.println("                          ABC Cafe");
         System.out.println("                Lot 123, Jalan Genting Kelang,");
