@@ -716,7 +716,7 @@ public class Assignment {
                     break;
                 case 2:
                     toCashpay = true;
-                    System.out.print("Enter Cash Received > RM");
+                    System.out.print("Enter Cash Received > RM ");
                     cashReceived = getInput(cashReceived);
                     scan.nextLine();
                     if (cashReceived == 0) { //invalid
@@ -764,14 +764,14 @@ public class Assignment {
                 pay = new Ewallet(ewalletName, "A12345", "REFERENCE", grandTotal);
             }
         } else {
-            System.out.println("    Changes(RM) : " + String.format("%.2f", checkCash.getChange()));
+            System.out.println("Changes(RM) : " + String.format("%.2f", checkCash.getChange()));
             if (haveVoucher) {
                 pay = new Cash(cashReceived, grandTotal, applyVoucher.calculateDiscount(subtotal));
             } else {
                 pay = new Cash(cashReceived, grandTotal);
             }
         }
-        System.out.println(" To print receipt... ");
+        System.out.println("\nTo print receipt... ");
         systemPause();
         pay.transaction(grandTotal); //transaction with bank
         return pay;
