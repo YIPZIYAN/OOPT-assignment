@@ -412,7 +412,7 @@ public class Assignment {
         Collections.sort(cart, OrderDetails.Comparator);
         double subtotal = 0;
         int sameCount = 0;
-        System.out.println("Cart");
+        System.out.println("                     + Cart +\n");
         System.out.println("Order ID : " + String.format("%04d", ++orderID));
         if (cart.isEmpty()) { //if empty
             System.out.println(RED + "Cart Is Empty!!" + RESET);
