@@ -66,4 +66,12 @@ public class OrderDetails implements Comparable<OrderDetails> {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    public String displaySalesDetails() {
+        return String.format("%-41s %7d      RM %.2f", orderList.displayMenu(), quantity, orderList.price * quantity);
+    }
+
+    public String displaySameSalesDetails() {
+        return String.format("%-41s %7d      RM %.2f", orderList.displayMenuNoID(), quantity, orderList.price * quantity);
+    }
+
 }
