@@ -75,7 +75,7 @@ public class Assignment {
             loginSuccessful = login.isLoginSucess();
             if (loginSuccessful) {
                 for (Employee empDetail : empDetails) {
-                    if (empDetail.getEmpID().equals(login.getId())) {
+                    if (empDetail.getEmpID().equals(login.getId().toUpperCase())) {
                         empInCharge = empDetail;
                     }
                 }
