@@ -43,8 +43,8 @@ class Takeaway extends OrderType {
 //child class TABLE - FC
 class Table extends OrderType {
 
-    int tableNo;
-    String tableId;
+    protected int tableNo;
+    protected String tableId;
 
     public Table(int tableNo) {
         super('D');
