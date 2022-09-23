@@ -209,7 +209,7 @@ public class Assignment {
 
         System.out.println("\n                  + Sales Summary +");
         System.out.println("=================================================");
-        System.out.println("  RECEIPT NO      STAFF    O/TYPE     TOTAL   ");
+        System.out.println("  RECEIPT NO      STAFF      O/TYPE     TOTAL   ");
         System.out.println("=================================================");
 
         for (Order order : orderRecord) {
