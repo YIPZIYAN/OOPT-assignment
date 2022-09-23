@@ -124,7 +124,7 @@ public class Assignment {
                     break;
                 case 5:
                     clearScreen();
-                    salesSummary(orderRecord);
+                    salesSummary(orderRecord, menu);
                     systemPause();
                     break;
                 case 0:
@@ -203,11 +203,17 @@ public class Assignment {
         }
     }
 
-    public static void salesSummary(ArrayList<Order> orderRecord) {
+    public static void salesSummary(ArrayList<Order> orderRecord, Menu[] menu) {
         double sumTotal = 0;
         int salesCount = 0;
 
-        System.out.println("\n                  + Sales Summary +");
+        System.out.println("\n                  + Sales Summary +\n\n");
+        System.out.println("   Item List      Quantity Sold");
+        System.out.println(" --------------------------------");
+        for (Menu i : menu) {
+            //System.out.println(String.format("%s",menu.)); //hereee            
+        }
+        System.out.println("\n\n\n");
         System.out.println("=================================================");
         System.out.println("  RECEIPT NO      STAFF    O/TYPE     TOTAL   ");
         System.out.println("=================================================");
