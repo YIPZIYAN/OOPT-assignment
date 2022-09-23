@@ -9,13 +9,13 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Assignment {
-    
+
     static Scanner scan = new Scanner(System.in);
     public static final String RED = "\u001B[31m";
     public static final String RESET = "\u001B[0m";
-    
+
     public static void main(String[] args) {
-        
+
         Bank bank = new Bank(1000); //set a basic money for transaction
 
         //Employee Details - Vallerie
@@ -24,13 +24,13 @@ public class Assignment {
             new Employee("XAVIER", 'M', "0138796454", "Staff3333", "Clerk", 3000.00),
             new Employee("WINSON", 'M', "0189764533", "Staff4444", "Clerk", 3000.00),
             new Employee("VANESSA", 'F', "0135437755", "Staff5555", "Clerk", 3000.00)};
-        
+
         Table[] tableNo = {new Table(1), new Table(2), new Table(3), new Table(4), new Table(5),
             new Table(6), new Table(7), new Table(8), new Table(9), new Table(10)};
 
         //Menu data - FC
-        Menu[] menu = {new Food("Fry Noodle", "F001L", 10.00, 'L'), //arg (name, ID, price, size)
-            new Food("Fry Noodle", "F001R", 8.00, 'R'), // R = Regular Size
+        Menu[] menu = {new Food("Fried Noodle", "F001L", 10.00, 'L'), //arg (name, ID, price, size)
+            new Food("Fried Noodle", "F001R", 8.00, 'R'), // R = Regular Size
             new Food("Fried Rice", "F002L", 12.00, 'L'), // L = large, 
             new Food("Fried Rice", "F002R", 10.00, 'R'),
             new Food("Soup Noodle", "F003L", 10.00, 'L'),
@@ -42,7 +42,7 @@ public class Assignment {
             new Beverage("Milo", "D003I", 3.50, "Iced"),
             new Beverage("Milo", "D003H", 3.00, "Hot")
         };
-        
+
         Member[] member = {new Member("YZY", "012-1231123"),
             new Member("Florryn", "011-23222233"),
             new Member("Vallerie", "012-7482947"),
@@ -63,7 +63,7 @@ public class Assignment {
             new Voucher("CTRLM", 5, 10, 10, LocalDate.of(2022, 9, 16)),
             new Voucher("QMZZR", 10, 10, 10, LocalDate.of(2022, 8, 31)),
             new Voucher("DJHWSCXK", 20, 20, 10, LocalDate.of(2022, 8, 18))};
-        
+
         ArrayList<OrderDetails> cart = new ArrayList<>();
         ArrayList<Order> orderRecord = new ArrayList<>();
 
@@ -72,10 +72,10 @@ public class Assignment {
         for (Menu i : menu) {
             itemSales.add(new OrderDetails(i, 0));
         }
-        
+
         Employee empInCharge = new Employee();
         Login login = new Login(empDetails);
-        
+
         boolean loginSuccessful = false;
         do {
             loginSuccessful = login.isLoginSucess();
@@ -87,9 +87,9 @@ public class Assignment {
                 }
                 login.frame.setVisible(!loginSuccessful);
             }
-            
+
         } while (!loginSuccessful);
-        
+
         int choice = 0;
         boolean doneOrder = false;
         do {
@@ -102,8 +102,8 @@ public class Assignment {
             System.out.println("        2 - Take Order");
             System.out.println("        3 - Member"); // to display member points
             System.out.println("        4 - Voucher");
-            System.out.println("        5 - Sales Summary");
             if (empInCharge.getPosition().equals("Manager")) {
+                System.out.println("        5 - Sales Summary");
                 System.out.println("        6 - Account");
             }
             System.out.println("        0 - Exit");
@@ -128,14 +128,16 @@ public class Assignment {
                     displayVoucher(voucher);
                     systemPause();
                     break;
-                case 5:
-                    clearScreen();
-                    salesSummary(itemSales, menu);
-                    systemPause();
-                    break;
                 case 0:
                     System.exit(0);
                     break;
+                case 5:
+                    if (empInCharge.getPosition().equals("Manager")) {
+                        clearScreen();
+                        salesSummary(itemSales, menu);
+                        systemPause();
+                        break;
+                    }
                 case 6: //only can access if emp is manager level
                     if (empInCharge.getPosition().equals("Manager")) {
                         displayBank(bank);
@@ -146,9 +148,9 @@ public class Assignment {
                     systemPause();
             }
         } while (choice != 0);
-        
+
     }
-    
+
     public static void orderMenu(Menu[] menu, ArrayList<OrderDetails> cart, Voucher[] voucher, Table[] tableNo, Member[] member, Employee empInCharge, ArrayList<Order> orderRecord, ArrayList<OrderDetails> itemSales) {
         boolean doneOrder = false;
         boolean continueInput;
@@ -196,7 +198,7 @@ public class Assignment {
                 continueInput = false;
             }
         } while (continueInput);
-        
+
         if (doneOrder) {
             Order order = settingBeforePayment(tableNo, cart, member, empInCharge); //get complete order
             for (OrderDetails i : itemSales) {
@@ -215,32 +217,32 @@ public class Assignment {
             cart.clear();
         }
     }
-    
-    public static void salesSummary(ArrayList<OrderDetails> orderDetails, Menu[] menu) {
+
+    public static void salesSummary(ArrayList<OrderDetails> itemSales, Menu[] menu) {
         double sumTotal = 0;
         int salesCount = 0;
-        
-        System.out.println("\n                  + Sales Summary +\n\n");
-        System.out.println("   Item List      Quantity Sold");
-        System.out.println(" --------------------------------");
-        for (OrderDetails orderDetail : orderDetails) {
-            System.out.println(orderDetail);
-        }
+        int i = 0;
+        System.out.println("\n                         + Sales Summary +");
+        System.out.println("                    Date : " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")));
+        System.out.println("                                                          Sales");
+        System.out.println("      Item List                                Qty     Amount (RM) ");
+        System.out.println(" ===================================================================");
+        for (OrderDetails orderDetail : itemSales) {
 
-//        System.out.println("\n\n\n");
-//        System.out.println("=================================================");
-//        System.out.println("  RECEIPT NO      STAFF      O/TYPE     TOTAL   ");
-//        System.out.println("=================================================");
-//        
-//        for (orderDetails order : orderDetails) {
-//            System.out.println(" " + order.toString());
-//            sumTotal += order.getGrandTotal();
-//            salesCount++;
-//        }
-//        System.out.println("=================================================");
-//        System.out.println("  Total Sales: RM " + String.format("%.2f", sumTotal) + " of " + salesCount + " sales.");
+            try {
+                if (itemSales.get(i).getOrderList().itemName.equals(itemSales.get(i - 1).getOrderList().itemName)) {
+                    System.out.println(itemSales.get(i).displaySameSalesDetails());
+                } else {
+                    System.out.println(itemSales.get(i).displaySalesDetails());
+                }
+            } catch (Exception e) {
+                System.out.println(itemSales.get(i).displaySalesDetails());
+            }
+            i++;
+        }
+        System.out.println(" ===================================================================");
     }
-    
+
     public static void displayMember(final Member[] member) {
         clearScreen();
         System.out.println("\n             + Member List +");
@@ -251,7 +253,7 @@ public class Assignment {
         }
         System.out.println("==========================================");
     }
-    
+
     public static void displayVoucher(final Voucher[] voucher) {
         clearScreen();
         System.out.println("\n                    + Voucher List +");
@@ -260,10 +262,10 @@ public class Assignment {
         for (Voucher i : voucher) {
             System.out.println(" " + i);
         }
-        
+
         System.out.println("======================================================");
     }
-    
+
     public static void displayBank(final Bank bank) {
         char choice = 0;
         do {
@@ -281,25 +283,25 @@ public class Assignment {
                 default:
                     System.out.println(RED + "Invalid Input!!" + RESET);
             }
-            
+
         } while (Character.toUpperCase(choice) != 'Y' && Character.toUpperCase(choice) != 'N');
-        
+
     }
-    
+
     public static void startOrder(final Menu[] menu, ArrayList<OrderDetails> cart) {
         boolean validItem = false;
         boolean isFood;
         boolean isBeverage;
         boolean cont;
-        
+
         String itemID;
         char size = 'x';
-        
+
         Menu orderItem = new Menu(); //get the ordered menu details
         int qtyOrder = 0;
         OrderDetails orderDetails = new OrderDetails(); //save to orderDetails and add to cart
         int sameItemIndex = 0;
-        
+
         do {
             clearScreen();
             displayMenu(menu);
@@ -310,7 +312,7 @@ public class Assignment {
                 System.out.print("Pick An Item      > ");
                 itemID = scan.nextLine();
                 itemID = itemID.toUpperCase();
-                
+
                 for (Menu i : menu) {   //check item id available
                     if (i.checkItem(itemID)) {
                         validItem = true;
@@ -326,13 +328,13 @@ public class Assignment {
                         validItem = false;
                     }
                 }
-                
+
                 if (!validItem) {
                     System.out.println(RED + "Invalid Input!!" + RESET);
                 }
-                
+
             } while (!validItem);
-            
+
             do { //ask user select variation ([L/R][I/H])
                 size = getInput(size);
                 size = Character.toUpperCase(size); // change to upper case
@@ -356,7 +358,7 @@ public class Assignment {
                                 + "\n[I]ced/[H]ot       > ");
                     }
                 }
-                
+
             } while (!validItem);
             itemID = itemID.concat(Character.toString(size)); //get complete id
 
@@ -381,17 +383,17 @@ public class Assignment {
                     if (!same) {
                         orderDetails = new OrderDetails(orderItem, qtyOrder);
                     }
-                    
+
                 }
             }
-            
+
             System.out.print("You Had Selected >> ");
             if (orderItem instanceof Food) {
                 System.out.printf("%s - %s (%c) x %d (RM %.2f)\n", orderItem.itemID, orderItem.itemName, ((Food) orderItem).size, qtyOrder, orderItem.price * qtyOrder);
             } else {
                 System.out.printf("%s - %s (%s) x %d (RM %.2f)\n", orderItem.itemID, orderItem.itemName, ((Beverage) orderItem).type, qtyOrder, orderItem.price * qtyOrder);
             }
-            
+
             char choice = 0; //initailize with null
             boolean valid;
             do {
@@ -413,7 +415,7 @@ public class Assignment {
                         System.out.println(RED + "Invalid Input!!" + RESET);
                 }
             } while (!valid);
-            
+
             do {
                 valid = true;
                 choice = 0;
@@ -433,7 +435,7 @@ public class Assignment {
             } while (!valid);
         } while (cont);
     }
-    
+
     public static void displayCart(int orderID, final ArrayList<OrderDetails> cart) {
         clearScreen();
         Collections.sort(cart, OrderDetails.Comparator);
@@ -443,7 +445,7 @@ public class Assignment {
         System.out.println("Order ID : " + String.format("%04d", ++orderID));
         System.out.println("==============================================================");
         System.out.printf("%-3s %-9s%-16s%-10s%-6s%-9s%s\n", "No", "Item ID", "Item Name", "Price", "Type", "Quantity", "Subtotal");
-       //here
+        //here
         for (int i = 0; i < cart.size(); i++) {
             try {
                 if (cart.get(i).getOrderList().itemName.equals(cart.get(i - 1).getOrderList().itemName)) {
@@ -460,7 +462,7 @@ public class Assignment {
         System.out.println("==============================================================");
         System.out.printf("Total = RM %.2f\n", subtotal);
     }
-    
+
     public static boolean proceedPayment(int orderID, final ArrayList<OrderDetails> cart) {
         displayCart(orderID, cart);
         char cont = 0; //initialize null
@@ -479,10 +481,10 @@ public class Assignment {
                     System.out.println(RED + "Invalid Input!!" + RESET);
             }
         } while (!valid);
-        
+
         return false;
     }
-    
+
     public static void cartMenu(int orderID, final Menu[] menu, ArrayList<OrderDetails> cart) {
         int choice = 0;
         do {
@@ -513,15 +515,15 @@ public class Assignment {
                     System.out.println(RED + "Invalid Input!!" + RESET);
                     systemPause();
             }
-            
+
             if (cart.isEmpty()) {
                 break;
             }
-            
+
         } while (choice != 0);
-        
+
     }
-    
+
     public static void editCart(final Menu[] menu, ArrayList<OrderDetails> cart) {
         boolean valid;
         int cartNo = 0;
@@ -530,7 +532,7 @@ public class Assignment {
         String changeType = "Hot";
         char changeSize = 'L';
         String changeID = "";
-        
+
         System.out.print("Select A Cart No. > ");
         cartNo = getInput(cartNo);
         if (cartNo <= 0 || cartNo > cart.size()) {
@@ -538,7 +540,7 @@ public class Assignment {
             systemPause();
             return;
         }
-        
+
         System.out.print("Change :");
         if (cart.get(cartNo - 1).getOrderList() instanceof Food) {
             if (((Food) cart.get(cartNo - 1).getOrderList()).size == changeSize) {
@@ -553,7 +555,7 @@ public class Assignment {
             changeID = cart.get(cartNo - 1).getOrderList().itemID.substring(0, cart.get(cartNo - 1).getOrderList().itemID.length() - 1) + changeType.charAt(0);
             System.out.printf("%s - %s (%s) -> (%s)\n", cart.get(cartNo - 1).getOrderList().itemID, cart.get(cartNo - 1).getOrderList().itemName, ((Beverage) cart.get(cartNo - 1).getOrderList()).type, changeType);
         }
-        
+
         Menu changeMenu = new Menu();
         for (Menu i : menu) {
             if (i.itemID.equals(changeID)) {
@@ -561,7 +563,7 @@ public class Assignment {
             }
         }
         OrderDetails changeCart = new OrderDetails(changeMenu, cart.get(cartNo - 1).getQuantity());
-        
+
         do {
             valid = true;
             System.out.print("Are You Sure [Y/N] > ");
@@ -569,7 +571,7 @@ public class Assignment {
             switch (Character.toUpperCase(choice)) {
                 case 'Y':
                     boolean same = false;
-                    
+
                     for (int j = 0; j < cart.size(); j++) {   //check same item in cart, if same just add qty
                         if (cart.get(j).getOrderList().equals(changeCart.getOrderList())) {
                             same = true;
@@ -583,7 +585,7 @@ public class Assignment {
                     } else {
                         cart.set(cartNo - 1, changeCart);
                     }
-                    
+
                     break;
                 case 'N':
                     break;
@@ -593,12 +595,12 @@ public class Assignment {
             }
         } while (!valid);
     }
-    
+
     public static void deleteCart(ArrayList<OrderDetails> cart) {
         boolean valid;
         int cartNo = 0;
         char choice = 0;
-        
+
         System.out.print("Select A Cart No. > ");
         cartNo = getInput(cartNo);
         if (cartNo <= 0 || cartNo > cart.size()) {
@@ -606,14 +608,14 @@ public class Assignment {
             systemPause();
             return;
         }
-        
+
         System.out.print("Delete :");
         if (cart.get(cartNo - 1).getOrderList() instanceof Food) {
             System.out.printf("%s - %s (%c) x %d (RM %.2f)\n", cart.get(cartNo - 1).getOrderList().itemID, cart.get(cartNo - 1).getOrderList().itemName, ((Food) cart.get(cartNo - 1).getOrderList()).size, cart.get(cartNo - 1).getQuantity(), cart.get(cartNo - 1).getQuantity() * cart.get(cartNo - 1).getOrderList().price);
         } else {
             System.out.printf("%s - %s (%s) x %d (RM %.2f)\n", cart.get(cartNo - 1).getOrderList().itemID, cart.get(cartNo - 1).getOrderList().itemName, ((Beverage) cart.get(cartNo - 1).getOrderList()).type, cart.get(cartNo - 1).getQuantity(), cart.get(cartNo - 1).getQuantity() * cart.get(cartNo - 1).getOrderList().price);
         }
-        
+
         do {
             valid = true;
             System.out.println("Are You Sure [Y/N] > ");
@@ -629,9 +631,9 @@ public class Assignment {
                     valid = false;
             }
         } while (!valid);
-        
+
     }
-    
+
     public static void clearCart(ArrayList<OrderDetails> cart) {
         boolean valid;
         char choice = 0;
@@ -651,7 +653,7 @@ public class Assignment {
             }
         } while (!valid);
     }
-    
+
     public static void displayMenu(final Menu[] menu) {
         //display menu - FC
         clearScreen();
@@ -664,7 +666,7 @@ public class Assignment {
             } else {
                 check1 = menu[i].itemName;
                 check2 = menu[i - 1].itemName;
-                
+
                 if (check1.compareTo(check2) == 0) {
                     System.out.println(menu[i].displayMenuNoID());
                     System.out.println("");
@@ -672,11 +674,11 @@ public class Assignment {
                     System.out.println(menu[i].displayMenu());
                 }
             }
-            
+
         }
         System.out.println("===========================================\n");
     }
-    
+
     public static Order settingBeforePayment(Table[] tableNo, ArrayList<OrderDetails> cart, Member[] member, Employee emp) {
         OrderType orderType = new OrderType();
         Order order = new Order();
@@ -685,7 +687,7 @@ public class Assignment {
         char type = 0;
         int table = 0;
         boolean valid;
-        
+
         do {
             valid = true;
             System.out.print("[D]ine In/[T]ake away   > ");   //*need a looping or do it in another function
@@ -717,7 +719,7 @@ public class Assignment {
                     System.out.println(RED + "Invalid Input!!" + RESET);
             }
         } while (!valid);
-        
+
         boolean isMember = false;
         char choice = 0;
         do {
@@ -736,7 +738,7 @@ public class Assignment {
                     System.out.println(RED + "Invalid Input!!" + RESET);
             }
         } while (!valid);
-        
+
         while (isMember) {
             System.out.print("Enter Member ID > ");
             String memberID = scan.nextLine().toUpperCase();
@@ -770,10 +772,10 @@ public class Assignment {
                 } while (!valid);
             }
         }
-        
+
         return order;
     }
-    
+
     public static Payment payment(final Voucher[] voucher, final Order order) {
         char choice = 'c';
         boolean valid, haveVoucher, vValidDate, vMinSpend;
@@ -783,7 +785,7 @@ public class Assignment {
         double subtotal = order.calculateSubtotal(order.getOrderDetails());
         double grandTotal = 0;
         Cash checkCash = new Cash();
-        
+
         Voucher applyVoucher = new Voucher();
         char voucherChoice = 0;
         do {
@@ -804,7 +806,7 @@ public class Assignment {
                     System.out.println(RED + "Invalid Input!!" + RESET);
             }
         } while (!valid);
-        
+
         while (haveVoucher) {
             System.out.print("Enter Voucher Code > ");
             String voucherCode = scan.nextLine();
@@ -819,7 +821,7 @@ public class Assignment {
                     haveVoucher = false;
                 }
             }
-            
+
             if (!haveVoucher) {
                 System.out.println(RED + "No Such Voucher Code!" + RESET);
             } else if (!vValidDate) {
@@ -829,7 +831,7 @@ public class Assignment {
             } else {
                 break; //valid voucher
             }
-            
+
             do {
                 valid = true;
                 System.out.print("[T]ry Again/[C]ontinue Without Voucher? > ");
@@ -846,9 +848,9 @@ public class Assignment {
                         System.out.println(RED + "Invalid Input!!" + RESET);
                 }
             } while (!valid);
-            
+
         }
-        
+
         System.out.println(".............................");
         System.out.println("..         Payment         ..");
         System.out.println(".............................");
@@ -864,7 +866,7 @@ public class Assignment {
             grandTotal = order.calculateGrandTotal(subtotal);
         }
         System.out.println("Grand Total(RM)    : " + String.format("%8.2f", grandTotal));
-        
+
         int payMethod = 0;
         String ewalletName = "";    //ewallet details
         int epayMethod = 0;
@@ -923,7 +925,7 @@ public class Assignment {
                         if (!checkCash.checkAmount(grandTotal)) {
                             valid = false;
                             System.out.println(RED + "Insufficient Amount!" + RESET);
-                            
+
                         }
                         checkCash.setChange(cashReceived - grandTotal);
                     }
@@ -932,7 +934,7 @@ public class Assignment {
                     valid = false;
                     System.out.println(RED + "Invalid Input!!" + RESET);
             }
-            
+
             if (valid) {
                 do {
                     System.out.print("Confirm payment [Y/N] > ");
@@ -948,9 +950,9 @@ public class Assignment {
                     }
                 } while (Character.toUpperCase(choice) != 'Y' && Character.toUpperCase(choice) != 'N');
             }
-            
+
         } while (!valid);
-        
+
         Payment pay = null; //store payment
 
         if (toEpay) {
@@ -973,7 +975,7 @@ public class Assignment {
         systemPause();
         return pay;
     }
-    
+
     public static void receipt(final Payment payment, final Order order) {
         clearScreen();
         System.out.println("");
@@ -1008,7 +1010,7 @@ public class Assignment {
         if (order.getOrderType() instanceof Takeaway) {
             System.out.printf("   %-20s %33.2f\n", "Packaging Fee (RM)", 3.00);
         }
-        
+
         System.out.printf("   %-20s %33.2f\n", "Voucher ", payment.discountAmount); //change to discountAmount 
         System.out.printf("   %-20s %33.2f\n", "Total ", payment.grandTotal);
         if (payment instanceof Cash) {
@@ -1020,7 +1022,7 @@ public class Assignment {
         System.out.println("");
         System.out.println("");
         systemPause();
-        
+
     }
 
     //general function
@@ -1034,7 +1036,7 @@ public class Assignment {
         }
         return input;
     }
-    
+
     public static char getInput(char input) {  //exception handling for char input
         String buf;
         try {
@@ -1046,10 +1048,10 @@ public class Assignment {
         } catch (Exception e) { //invalid
             return 0; //return null
         }
-        
+
         return input;
     }
-    
+
     public static double getInput(double input) {  //exception handling for double input
         try {
             input = scan.nextDouble();
@@ -1059,12 +1061,12 @@ public class Assignment {
         }
         return input;
     }
-    
+
     public static void systemPause() {
         System.out.println("Press Enter To Continue...");
         scan.nextLine();
     }
-    
+
     public static void clearScreen() {
         try {
             Robot robot = new Robot();
